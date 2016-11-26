@@ -2,11 +2,13 @@
 
 namespace app\controllers;
 
+use app\models\forms\InstallForm;
+use app\models\forms\LoginForm;
+use app\models\Users;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
 
 class SiteController extends Controller
 {
@@ -63,7 +65,30 @@ class SiteController extends Controller
     }
 
     /**
-     * Login action.
+     * Installing db schema and create admin (only for first open)
+     *
+     * @return string|\yii\web\Response
+     */
+    public function actionInstall()
+    {
+        $hasUser = Users::find()->count();
+
+        // @todo: need more check
+        if ($hasUser) {
+            return $this->goHome();
+        }
+
+        $model = new InstallForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->install()) {
+            return $this->redirect('login');
+        }
+
+        return $this->render('install', ['model' => $model]);
+    }
+
+    /**
+     * Login action
      *
      * @return string
      */
@@ -75,15 +100,14 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            return $this->redirect('/admin/index');
         }
-        return $this->render('login', [
-            'model' => $model,
-        ]);
+
+        return $this->render('login', ['model' => $model]);
     }
 
     /**
-     * Logout action.
+     * Logout action
      *
      * @return string
      */
