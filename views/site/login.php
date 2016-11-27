@@ -10,31 +10,32 @@ use yii\bootstrap\ActiveForm;
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?php $form = ActiveForm::begin([
-        'id' => 'login-form',
-        'layout' => 'horizontal',
-        'fieldConfig' => [
-            'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            'labelOptions' => ['class' => 'col-lg-1 control-label'],
-        ],
-    ]); ?>
-
-        <?= $form->field($model, 'email')->textInput() ?>
-
-        <?= $form->field($model, 'password')->passwordInput() ?>
-
-        <?= $form->field($model, 'rememberMe')->checkbox([
-            'template' => "<div class=\"col-lg-offset-1 col-lg-3\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
-        ]) ?>
-
-        <div class="form-group">
-            <div class="col-lg-offset-1 col-lg-11">
-                <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-            </div>
+<div class="splash-container">
+    <div class="panel panel-default panel-border-color panel-border-color-primary">
+        <div class="panel-heading">
+            <?= Html::img('/img/logo-xx.png', ['class' => 'logo-img', 'width' => 102, 'heigth' => 27]); ?>
+            <span class="splash-description">Login in system</span>
         </div>
+        <div class="panel-body">
+            <?php $form = ActiveForm::begin(); ?>
 
-    <?php ActiveForm::end(); ?>
+            <?= $form->field($model, 'email')->textInput(['placeholder' => 'Email'])->label(false) ?>
+
+            <?= $form->field($model, 'password')->passwordInput(['placeholder' => 'Password'])->label(false) ?>
+
+            <div class="form-group row login-tools">
+                <?= $form->field($model, 'rememberMe')->checkbox([
+                    'template' => "<div class=\"col-xs-6 login-remember\"><div class=\"be-checkbox\">{input}\n{label}</div></div>\n",
+                ]) ?>
+
+                <div class="col-xs-6 login-forgot-password"><?= Html::a('Forgot password?', 'restore'); ?></div>
+            </div>
+
+            <div class="form-group login-submit">
+                <?= Html::submitButton('Login', ['class' => 'btn btn-primary btn-xl']) ?>
+            </div>
+            <?php ActiveForm::end(); ?>
+        </div>
+    </div>
+    <div class="splash-footer">&copy; 2016 Deployment from Git</div>
 </div>

@@ -18,9 +18,13 @@ class AppAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/site.css',
+        'library/material-design-icons/css/material-design-iconic-font.min.css',
+        'library/perfect-scrollbar/css/perfect-scrollbar.min.css',
+        'css/style.css',
     ];
     public $js = [
+        'library/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js',
+        'js/main.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

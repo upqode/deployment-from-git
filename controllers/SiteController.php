@@ -2,15 +2,15 @@
 
 namespace app\controllers;
 
+use app\components\BaseController;
 use app\models\forms\InstallForm;
 use app\models\forms\LoginForm;
 use app\models\Users;
 use Yii;
 use yii\filters\AccessControl;
-use yii\web\Controller;
 use yii\filters\VerbFilter;
 
-class SiteController extends Controller
+class SiteController extends BaseController
 {
     /**
      * @inheritdoc
@@ -55,13 +55,21 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays homepage.
+     * Homepage
      *
-     * @return string
+     * @return \yii\web\Response
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        if (!Yii::$app->user->isGuest) {
+            return $this->redirect(['/admin/index']);
+        }
+
+        if (!Users::find()->count()) { // @todo: need method
+            return $this->redirect(['install']);
+        }
+
+        return $this->redirect(['login']);
     }
 
     /**
@@ -73,7 +81,7 @@ class SiteController extends Controller
     {
         $hasUser = Users::find()->count();
 
-        // @todo: need more check
+        // @todo: need more check. need method
         if ($hasUser) {
             return $this->goHome();
         }
@@ -81,7 +89,7 @@ class SiteController extends Controller
         $model = new InstallForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->install()) {
-            return $this->redirect('login');
+            return $this->redirect(['login']);
         }
 
         return $this->render('install', ['model' => $model]);
@@ -98,9 +106,11 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
+        $this->layout = BaseController::LAYOUT_UNAUTHORIZED;
         $model = new LoginForm();
+
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->redirect('/admin/index');
+            return $this->redirect(['/admin/index']);
         }
 
         return $this->render('login', ['model' => $model]);
