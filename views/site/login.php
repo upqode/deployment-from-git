@@ -8,7 +8,6 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
 $this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="splash-container">
     <div class="panel panel-default panel-border-color panel-border-color-primary">
@@ -28,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'template' => "<div class=\"col-xs-6 login-remember\"><div class=\"be-checkbox\">{input}\n{label}</div></div>\n",
                 ]) ?>
 
-                <div class="col-xs-6 login-forgot-password"><?= Html::a('Forgot password?', 'restore'); ?></div>
+                <div class="col-xs-6 login-forgot-password"><?= Html::a('Forgot password?', 'restore-password'); ?></div>
             </div>
 
             <div class="form-group login-submit">

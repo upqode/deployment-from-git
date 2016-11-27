@@ -9,13 +9,15 @@ class InstallForm extends Model
 {
     public $email;
     public $password;
+    public $password_repeat;
 
     public function rules()
     {
         return [
-            [['email', 'password'], 'required'],
-            ['password', 'string', 'min' => 6],
-            ['email', 'email']
+            [['email', 'password', 'password_repeat'], 'required'],
+            [['password', 'password_repeat'], 'string', 'min' => 6],
+            ['password', 'compare'],
+            ['email', 'email'],
         ];
     }
 

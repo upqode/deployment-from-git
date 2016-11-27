@@ -86,6 +86,7 @@ class SiteController extends BaseController
             return $this->goHome();
         }
 
+        $this->layout = BaseController::LAYOUT_UNAUTHORIZED;
         $model = new InstallForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->install()) {
