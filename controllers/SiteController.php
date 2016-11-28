@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\components\BaseController;
 use app\models\forms\InstallForm;
 use app\models\forms\LoginForm;
+use app\models\forms\RestorePassword;
 use app\models\Users;
 use Yii;
 use yii\filters\AccessControl;
@@ -20,13 +21,10 @@ class SiteController extends BaseController
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' => ['login', 'logout', 'restore-password', 'reset-password'],
                 'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
+                    ['actions' => ['logout'], 'allow' => true, 'roles' => ['@']],
+                    ['actions' => ['login', 'restore-password', 'reset-password'], 'allow' => true, 'roles' => ['?']],
                 ],
             ],
             'verbs' => [
@@ -103,10 +101,6 @@ class SiteController extends BaseController
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
         $this->layout = BaseController::LAYOUT_UNAUTHORIZED;
         $model = new LoginForm();
 
@@ -127,6 +121,55 @@ class SiteController extends BaseController
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    /**
+     * Restore password (send reset link on user email)
+     *
+     * @return string|\yii\web\Response
+     */
+    public function actionRestorePassword()
+    {
+        $this->layout = BaseController::LAYOUT_UNAUTHORIZED;
+
+        $model = new RestorePassword();
+        $model->scenario = RestorePassword::SCENARIO_RESTORE;
+
+        if ($model->load(Yii::$app->request->post()) && $model->restore()) {
+            Yii::$app->session->setFlash('successRestorePassword');
+            return $this->refresh();
+        }
+
+        return $this->render('restore-password', ['model' => $model]);
+    }
+
+    /**
+     * Reset password (change password)
+     *
+     * @param string $email
+     * @param string $key
+     * @return string|\yii\web\Response
+     */
+    public function actionResetPassword($email, $key)
+    {
+        $email = urldecode($email);
+        $user = Users::find()->where(['email' => $email, 'reset_key' => $key])->count();
+
+        if (!$user) {
+            return $this->goHome();
+        }
+
+        $this->layout = BaseController::LAYOUT_UNAUTHORIZED;
+
+        $model = new RestorePassword();
+        $model->scenario = RestorePassword::SCENARIO_RESET;
+
+        if ($model->load(Yii::$app->request->post()) && $model->reset($email)) {
+            Yii::$app->session->setFlash('successResetPassword');
+            return $this->redirect(['login']);
+        }
+
+        return $this->render('reset-password', ['model' => $model]);
     }
 
 }

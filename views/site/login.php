@@ -7,15 +7,28 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Login';
+$this->title = 'Login in system';
+$this->registerAssetBundle('yii\bootstrap\BootstrapPluginAsset');
 ?>
 <div class="splash-container">
     <div class="panel panel-default panel-border-color panel-border-color-primary">
         <div class="panel-heading">
-            <?= Html::img('/img/logo-xx.png', ['class' => 'logo-img', 'width' => 102, 'heigth' => 27]); ?>
-            <span class="splash-description">Login in system</span>
+            <a href="<?= Yii::$app->homeUrl ?>">
+                <?= Html::img('/img/logo-xx.png', ['class' => 'logo-img', 'width' => 102, 'heigth' => 27]); ?>
+            </a>
+            <span class="splash-description"><?= Html::encode($this->title) ?></span>
         </div>
         <div class="panel-body">
+            <?php if (Yii::$app->session->hasFlash('successResetPassword')): ?>
+                <div role="alert" class="alert alert-contrast alert-success alert-dismissible">
+                    <div class="icon"><span class="mdi mdi-check"></span></div>
+                    <div class="message">
+                        <button type="button" data-dismiss="alert" aria-label="Close" class="close"><span aria-hidden="true" class="mdi mdi-close"></span></button>
+                        Your password has been successfully changed! You can login with the new password.
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <?php $form = ActiveForm::begin(); ?>
 
             <?= $form->field($model, 'email')->textInput(['placeholder' => 'Email'])->label(false) ?>
@@ -36,5 +49,5 @@ $this->title = 'Login';
             <?php ActiveForm::end(); ?>
         </div>
     </div>
-    <div class="splash-footer">&copy; 2016 Deployment from Git</div>
+    <div class="splash-footer">&copy; <?= Yii::$app->name ?></div>
 </div>

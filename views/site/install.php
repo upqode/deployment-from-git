@@ -7,13 +7,13 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Install';
+$this->title = 'Install system';
 ?>
 <div class="splash-container sign-up">
     <div class="panel panel-default panel-border-color panel-border-color-primary">
         <div class="panel-heading">
             <?= Html::img('/img/logo-xx.png', ['class' => 'logo-img', 'width' => 102, 'heigth' => 27]); ?>
-            <span class="splash-description">Install system</span>
+            <span class="splash-description"><?= Html::encode($this->title) ?></span>
         </div>
         <div class="panel-body">
             <?php $form = ActiveForm::begin(); ?>

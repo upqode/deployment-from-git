@@ -21,6 +21,7 @@ class AppAsset extends AssetBundle
         'library/material-design-icons/css/material-design-iconic-font.min.css',
         'library/perfect-scrollbar/css/perfect-scrollbar.min.css',
         'css/style.css',
+        'css/main.css',
     ];
     public $js = [
         'library/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js',
