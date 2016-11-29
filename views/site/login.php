@@ -8,7 +8,6 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
 $this->title = 'Login in system';
-$this->registerAssetBundle('yii\bootstrap\BootstrapPluginAsset');
 ?>
 <div class="splash-container">
     <div class="panel panel-default panel-border-color panel-border-color-primary">
