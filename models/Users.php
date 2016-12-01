@@ -93,4 +93,19 @@ class Users extends ActiveRecord implements IdentityInterface
         return Yii::$app->security->validatePassword($password, $this->password);
     }
 
+    /**
+     * Get user permission list
+     *
+     * @return string
+     */
+    public function getPermissionsList()
+    {
+        $permissions[] = $this->has_edit ? 'Edit repository' : false;
+        $permissions[] = $this->has_create ? 'Create repository' : false;
+        $permissions[] = $this->has_update ? 'Update repository' : false;
+        $permissions[] = $this->has_delete ? 'Delete repository' : false;
+
+        return implode('<br>', array_filter($permissions));
+    }
+
 }
