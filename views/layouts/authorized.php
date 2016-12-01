@@ -121,21 +121,24 @@ AppAsset::register($this);
 
     <div class="be-left-sidebar">
         <div class="left-sidebar-wrapper">
-            <a href="#" class="left-sidebar-toggle">Site menu</a>
+            <a href="#" class="left-sidebar-toggle">Main menu</a>
 
             <div class="left-sidebar-spacer">
                 <div class="left-sidebar-scroll">
                     <div class="left-sidebar-content">
-                        <ul class="sidebar-elements">
-                            <li class="divider">Menu</li>
-                            <li class="active"><a href="<?= Url::toRoute(['/admin/index']); ?>"><i class="icon mdi mdi-chart"></i><span>Statistics</span></a></li>
-                            <li><a href="<?= Url::toRoute(['/repository/index']); ?>"><i class="icon mdi mdi-storage"></i><span>Repositories</span></a></li>
-                            <li><a href="<?= Url::toRoute(['/backup/index']); ?>"><i class="icon mdi mdi-archive"></i><span>Backups</span></a></li>
-                            <li><a href="<?= Url::toRoute(['/admin/setting']); ?>"><i class="icon mdi mdi-settings"></i><span>Settings</span></a></li>
-                            <li><a href="<?= Url::toRoute(['/user/index']); ?>"><i class="icon mdi mdi-accounts-list-alt"></i><span>Users</span></a></li>
-                            <li><a href="<?= Url::toRoute(['/admin/cron']); ?>"><i class="icon mdi mdi-time-interval"></i><span>Cron</span></a></li>
-                            <li><a href="<?= Url::toRoute(['/log/index']); ?>"><i class="icon mdi mdi-file"></i><span>Logs</span></a></li>
-                        </ul>
+                        <?= \app\widgets\Menu::widget([
+                            'options' => ['class' => 'sidebar-elements'],
+                            'items' => [
+                                ['label' => 'Menu', 'options' => ['class' => 'divider']],
+                                ['label' => 'Statistics', 'icon' => 'icon mdi mdi-chart', 'url' => ['/admin/index']],
+                                ['label' => 'Repositories', 'icon' => 'icon mdi mdi-storage', 'url' => ['/repository/index']],
+                                ['label' => 'Backups', 'icon' => 'icon mdi mdi-archive', 'url' => ['/backup/index']],
+                                ['label' => 'Settings', 'icon' => 'icon mdi mdi-settings', 'url' => ['/admin/setting']],
+                                ['label' => 'Users', 'icon' => 'icon mdi mdi-accounts-list-alt', 'url' => ['/user/index']],
+                                ['label' => 'Cron', 'icon' => 'icon mdi mdi-time-interval', 'url' => ['/admin/cron']],
+                                ['label' => 'Logs', 'icon' => 'icon mdi mdi-file', 'url' => ['/log/index']],
+                            ],
+                        ]); ?>
                     </div>
                 </div>
             </div>
