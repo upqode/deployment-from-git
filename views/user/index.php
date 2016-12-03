@@ -14,13 +14,14 @@ $this->title = 'Users';
 <div class="row">
     <div class="col-sm-12">
         <?php if (Yii::$app->session->hasFlash('userOperation')): ?>
-            <div role="alert" class="alert alert-contrast alert-success alert-dismissible">
-                <div class="icon"><span class="mdi mdi-check"></span></div>
+            <?php $flash = Yii::$app->session->getFlash('userOperation'); ?>
+            <div role="alert" class="alert alert-contrast <?= $flash['type'] ?> alert-dismissible">
+                <div class="icon"><span class="<?= $flash['icon'] ?>"></span></div>
                 <div class="message">
                     <button type="button" data-dismiss="alert" aria-label="Close" class="close">
                         <span aria-hidden="true" class="mdi mdi-close"></span>
                     </button>
-                    <strong>Success!</strong> <?= Yii::$app->session->getFlash('userOperation'); ?>
+                    <strong><?= $flash['title'] ?></strong> <?= $flash['message'] ?>
                 </div>
             </div>
         <?php endif; ?>
@@ -63,7 +64,14 @@ $this->title = 'Users';
                                         <ul role="menu" class="dropdown-menu pull-right">
                                             <li><a href="#">Latest activity</a></li>
                                             <li><a href="#">Modify</a></li>
-                                            <li><a href="#">Delete</a></li>
+                                            <li>
+                                                <?= Html::a('Delete', ['delete', 'id' => $user->id], [
+                                                    'data' => [
+                                                        'method' => 'POST',
+                                                        'confirm' => 'Are you sure you want to delete this item?',
+                                                    ],
+                                                ]); ?>
+                                            </li>
                                         </ul>
                                     </div>
                                 </td>

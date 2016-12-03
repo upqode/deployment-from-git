@@ -8,6 +8,7 @@ use app\models\Users;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 
 class UserController extends BaseController
 {
@@ -24,6 +25,12 @@ class UserController extends BaseController
                 'class' => AccessControl::className(),
                 'rules' => [
                     ['allow' => true, 'roles' => ['@']],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
                 ],
             ],
         ];
@@ -57,11 +64,48 @@ class UserController extends BaseController
         $model = new UserForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('userOperation', 'Пользователь успешно добавлен.');
+            Yii::$app->session->setFlash('userOperation', [
+                'type' => 'alert-success',
+                'icon' => 'mdi mdi-check',
+                'title' => 'Success!',
+                'message' => 'Пользователь успешно удален!',
+            ]);
+
             return $this->redirect(['index']);
         }
 
         return $this->render('create', ['model' => $model]);
+    }
+
+    /**
+     * Delete user
+     *
+     * @param integer $id
+     * @return \yii\web\Response
+     */
+    public function actionDelete($id)
+    {
+        $id = intval($id);
+        $user = Users::findOne($id);
+        $userCount = Users::find()->count();
+
+        if ($user && $userCount > 1 && $user->delete()) {
+            Yii::$app->session->setFlash('userOperation', [
+                'type' => 'alert-success',
+                'icon' => 'mdi mdi-check',
+                'title' => 'Success!',
+                'message' => 'Пользователь успешно удален!',
+            ]);
+        } else {
+            Yii::$app->session->setFlash('userOperation', [
+                'type' => 'alert-danger',
+                'icon' => 'mdi mdi-close-circle-o',
+                'title' => 'Danger!',
+                'message' => 'При удаление пользователя возникли проблемы!',
+            ]);
+        }
+
+        return $this->redirect(['index']);
     }
 
 }
