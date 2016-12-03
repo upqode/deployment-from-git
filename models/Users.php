@@ -32,6 +32,16 @@ class Users extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * @return array the validation rules.
+     */
+    public function rules()
+    {
+        return [
+            [['email', 'has_create', 'has_edit', 'has_delete', 'has_update'], 'safe'],
+        ];
+    }
+
+    /**
      * @inheritdoc
      */
     public static function findIdentity($id)

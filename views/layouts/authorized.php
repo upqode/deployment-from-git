@@ -24,7 +24,7 @@ AppAsset::register($this);
 <div class="be-wrapper be-fixed-sidebar">
     <nav class="navbar navbar-default navbar-fixed-top be-top-header">
         <div class="container-fluid">
-            <div class="navbar-header"><a href="#" class="navbar-brand"></a></div>
+            <div class="navbar-header"><a href="<?= Yii::$app->homeUrl ?>" class="navbar-brand"></a></div>
             <div class="be-right-navbar">
                 <ul class="nav navbar-nav navbar-right be-user-nav">
                     <li class="dropdown">

@@ -6,15 +6,30 @@
 /* @var $pages \yii\data\Pagination */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\LinkPager;
 
 $this->title = 'Users';
 ?>
 <div class="row">
     <div class="col-sm-12">
+        <?php if (Yii::$app->session->hasFlash('userOperation')): ?>
+            <div role="alert" class="alert alert-contrast alert-success alert-dismissible">
+                <div class="icon"><span class="mdi mdi-check"></span></div>
+                <div class="message">
+                    <button type="button" data-dismiss="alert" aria-label="Close" class="close">
+                        <span aria-hidden="true" class="mdi mdi-close"></span>
+                    </button>
+                    <strong>Success!</strong> <?= Yii::$app->session->getFlash('userOperation'); ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
         <div class="panel panel-default panel-table">
             <div class="panel-heading">User lists
-                <div class="tools"><span class="icon mdi mdi-account-add"></span></div>
+                <div class="tools">
+                    <a href="<?= Url::toRoute(['create']); ?>"><span class="icon mdi mdi-account-add"></span></a>
+                </div>
             </div>
             <div class="panel-body">
                 <?php if ($users): ?>
