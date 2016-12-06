@@ -63,7 +63,7 @@ $this->title = 'Users';
                                         <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">Action <span class="icon-dropdown mdi mdi-chevron-down"></span></button>
                                         <ul role="menu" class="dropdown-menu pull-right">
                                             <li><a href="#">Latest activity</a></li>
-                                            <li><a href="#">Modify</a></li>
+                                            <li><?= Html::a('Modify', ['update', 'id' => $user->id]); ?></li>
                                             <li>
                                                 <?= Html::a('Delete', ['delete', 'id' => $user->id], [
                                                     'data' => [

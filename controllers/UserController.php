@@ -61,7 +61,22 @@ class UserController extends BaseController
      */
     public function actionCreate()
     {
+        /** @var Users $identity */
+        $identity = Yii::$app->user->identity;
+
+        if (!$identity->is_admin) {
+            Yii::$app->session->setFlash('userOperation', [
+                'type' => 'alert-danger',
+                'icon' => 'mdi mdi-close-circle-o',
+                'title' => 'Danger!',
+                'message' => 'У вас недостаточно прав для выполнения данного действия!',
+            ]);
+
+            return $this->redirect(['index']);
+        }
+
         $model = new UserForm();
+        $model->scenario = UserForm::SCENARIO_CREATE;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('userOperation', [
@@ -78,6 +93,53 @@ class UserController extends BaseController
     }
 
     /**
+     * Update user info
+     *
+     * @param integer $id
+     * @return string|\yii\web\Response
+     */
+    public function actionUpdate($id)
+    {
+        $id = intval($id);
+        $user = Users::findOne($id);
+
+        /** @var Users $identity */
+        $identity = Yii::$app->user->identity;
+
+        if (!$user || !$identity->is_admin) {
+            Yii::$app->session->setFlash('userOperation', [
+                'type' => 'alert-danger',
+                'icon' => 'mdi mdi-close-circle-o',
+                'title' => 'Danger!',
+                'message' => 'У вас недостаточно прав для выполнения данного действия!',
+            ]);
+
+            return $this->redirect(['index']);
+        }
+
+        $model = new UserForm();
+        $model->attributes = $user->attributes;
+        $model->scenario = UserForm::SCENARIO_UPDATE;
+        $model->email = $model->password = null;
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $user->attributes = $model->attributes;
+            $user->update();
+
+            Yii::$app->session->setFlash('userOperation', [
+                'type' => 'alert-success',
+                'icon' => 'mdi mdi-check',
+                'title' => 'Success!',
+                'message' => 'Информация о пользователи обновлена!',
+            ]);
+
+            return $this->redirect(['index']);
+        }
+
+        return $this->render('update', ['model' => $model]);
+    }
+
+    /**
      * Delete user
      *
      * @param integer $id
@@ -89,7 +151,17 @@ class UserController extends BaseController
         $user = Users::findOne($id);
         $userCount = Users::find()->count();
 
-        if ($user && $userCount > 1 && $user->delete()) {
+        /** @var Users $identity */
+        $identity = Yii::$app->user->identity;
+
+        if (!$identity->is_admin) {
+            Yii::$app->session->setFlash('userOperation', [
+                'type' => 'alert-danger',
+                'icon' => 'mdi mdi-close-circle-o',
+                'title' => 'Danger!',
+                'message' => 'У вас недостаточно прав для выполнения данного действия!',
+            ]);
+        } elseif ($user && $userCount > 1 && $user->delete()) {
             Yii::$app->session->setFlash('userOperation', [
                 'type' => 'alert-success',
                 'icon' => 'mdi mdi-check',

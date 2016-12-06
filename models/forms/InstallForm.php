@@ -34,6 +34,7 @@ class InstallForm extends Model
             'email' => $this->email,
             'password' => \Yii::$app->security->generatePasswordHash($this->password),
             'auth_key' => \Yii::$app->security->generateRandomString(15),
+            'is_admin' => true,
             'has_create' => true,
             'has_delete' => true,
             'has_update' => true,

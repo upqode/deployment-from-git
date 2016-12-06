@@ -9,12 +9,16 @@ use yii\bootstrap\Html;
 
 <?php $form = ActiveForm::begin(); ?>
 
-<?= $form->field($model, 'email')->textInput(['placeholder' => 'Email']) ?>
+<?php if ($model->scenario == $model::SCENARIO_CREATE): ?>
 
-<?= $form->field($model, 'password')->passwordInput(['placeholder' => 'Password']) ?>
+    <?= $form->field($model, 'email')->textInput(['placeholder' => 'Email']) ?>
+
+    <?= $form->field($model, 'password')->passwordInput(['placeholder' => 'Password']) ?>
+
+<?php endif; ?>
 
 <div class="form-group">
-    <label>Permissions</label>
+    <label>Repository Permissions</label>
 
     <?= $form->field($model, 'has_create')->checkbox([
         'template' => '<div class="be-checkbox">{input} {label}</div>',
@@ -29,6 +33,14 @@ use yii\bootstrap\Html;
     ]) ?>
 
     <?= $form->field($model, 'has_update')->checkbox([
+        'template' => '<div class="be-checkbox">{input} {label}</div>',
+    ]) ?>
+</div>
+
+<div class="form-group">
+    <label>User Permissions</label>
+
+    <?= $form->field($model, 'is_admin')->checkbox([
         'template' => '<div class="be-checkbox">{input} {label}</div>',
     ]) ?>
 </div>

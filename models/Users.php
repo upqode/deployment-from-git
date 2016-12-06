@@ -15,6 +15,7 @@ use yii\web\IdentityInterface;
  * @property string $password
  * @property string $auth_key
  * @property string $reset_key
+ * @property integer $is_admin
  * @property integer $has_create
  * @property integer $has_edit
  * @property integer $has_delete
@@ -37,7 +38,7 @@ class Users extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['email', 'has_create', 'has_edit', 'has_delete', 'has_update'], 'safe'],
+            [['is_admin', 'has_create', 'has_edit', 'has_delete', 'has_update'], 'safe'],
         ];
     }
 
