@@ -12,6 +12,7 @@ use yii\web\IdentityInterface;
  *
  * @property string $id
  * @property string $email
+ * @property string $name
  * @property string $password
  * @property string $auth_key
  * @property string $reset_key
@@ -102,6 +103,16 @@ class Users extends ActiveRecord implements IdentityInterface
     public function validatePassword($password)
     {
         return Yii::$app->security->validatePassword($password, $this->password);
+    }
+
+    /**
+     * Get user or default name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name ?: 'No Name';
     }
 
     /**

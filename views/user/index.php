@@ -48,7 +48,7 @@ $this->title = 'Users';
                             <tr class="online">
                                 <td class="user-avatar cell-detail user-info">
                                     <?= Html::img('/img/avatar.png'); ?>
-                                    <span>Igor Zozulinksyi</span>
+                                    <span><?= $user->getName(); ?></span>
                                     <span class="cell-detail-description"><?= $user->email ?></span>
                                 </td>
                                 <td class="cell-detail">

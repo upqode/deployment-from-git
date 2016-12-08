@@ -5,6 +5,7 @@
 
 use yii\helpers\Html;
 use app\assets\AppAsset;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 ?>
@@ -30,16 +31,24 @@ AppAsset::register($this);
                     <li class="dropdown">
                         <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle">
                             <?= Html::img('/img/avatar.png'); ?>
-                            <span class="user-name">i3y3ik@gmail.com</span>
+                            <span class="user-name"><?= Yii::$app->user->identity->getName(); ?></span>
                         </a>
                         <ul role="menu" class="dropdown-menu">
                             <li>
                                 <div class="user-info">
-                                    <div class="user-name">i3y3ik@gmail.com</div>
+                                    <div class="user-name"><?= Yii::$app->user->identity->email ?></div>
                                 </div>
                             </li>
-                            <li><a href="#"><span class="icon mdi mdi-settings"></span> Settings</a></li>
-                            <li><a href="#"><span class="icon mdi mdi-power"></span> Logout</a></li>
+                            <li>
+                                <a href="<?= Url::toRoute(['/user/settings']); ?>">
+                                    <span class="icon mdi mdi-settings"></span> Settings
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<?= Url::toRoute(['/site/logout']); ?>" data-method="post">
+                                    <span class="icon mdi mdi-power"></span> Logout
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 </ul>

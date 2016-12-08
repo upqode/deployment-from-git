@@ -15,6 +15,8 @@ use yii\bootstrap\Html;
 
     <?= $form->field($model, 'password')->passwordInput(['placeholder' => 'Password']) ?>
 
+    <?= $form->field($model, 'repeat_password')->passwordInput(['placeholder' => 'Password again']) ?>
+
 <?php endif; ?>
 
 <div class="form-group">

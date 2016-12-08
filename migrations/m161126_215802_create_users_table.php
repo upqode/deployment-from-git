@@ -15,6 +15,7 @@ class m161126_215802_create_users_table extends Migration
         $this->createTable('users', [
             'id' => $this->primaryKey()->unsigned(),
             'email' => $this->string(100)->unique()->notNull(),
+            'name' => $this->string(50)->null(),
             'password' => $this->string(60)->notNull(),
             'auth_key' => $this->string(15)->notNull(),
             'reset_key' => $this->string(15)->null(),

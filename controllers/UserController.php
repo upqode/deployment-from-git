@@ -180,4 +180,66 @@ class UserController extends BaseController
         return $this->redirect(['index']);
     }
 
+    /**
+     * User settings
+     *
+     * @return string|\yii\web\Response
+     */
+    public function actionSettings()
+    {
+        /** @var Users $user */
+        $user = Yii::$app->user->identity;
+
+        $model_settings = new UserForm();
+        $model_settings->name = $user->name;
+        $model_settings->scenario = $model_settings::SCENARIO_USER_INFO;
+
+        $model_password = new UserForm();
+        $model_password->scenario = $model_password::SCENARIO_USER_PASS;
+
+        // change settings
+        if (Yii::$app->request->post('type') == $model_settings::SCENARIO_USER_INFO) {
+            if ($model_settings->load(Yii::$app->request->post()) && $model_settings->validate()) {
+                $user->name = $model_settings->name;
+                $user->update();
+
+                Yii::$app->session->setFlash('userOperation', [
+                    'type' => 'alert-success',
+                    'icon' => 'mdi mdi-check',
+                    'title' => 'Success!',
+                    'message' => 'Информация успешно обновлена!',
+                ]);
+
+                return $this->redirect(['index']);
+            }
+        }
+
+        // change password
+        if (Yii::$app->request->post('type') === $model_password::SCENARIO_USER_PASS) {
+            if ($model_password->load(Yii::$app->request->post()) && $model_password->validate()) {
+                print_r($model_password);
+                if ($user->validatePassword($model_password->old_password)) {
+                    $user->password = Yii::$app->security->generatePasswordHash($model_password->password);
+                    $user->update();
+
+                    Yii::$app->session->setFlash('userOperation', [
+                        'type' => 'alert-success',
+                        'icon' => 'mdi mdi-check',
+                        'title' => 'Success!',
+                        'message' => 'Пароль изменен!',
+                    ]);
+
+                    return $this->redirect(['index']);
+                } else {
+                    $model_password->addError('old_password', 'Old password is incorrect!');
+                }
+            }
+        }
+
+        return $this->render('settings', [
+            'model_settings' => $model_settings,
+            'model_password' => $model_password,
+        ]);
+    }
+
 }
