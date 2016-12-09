@@ -3,6 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use app\models\forms\ServiceForm;
 use yii\helpers\Html;
 use app\assets\AppAsset;
 use yii\helpers\Url;
@@ -113,12 +114,12 @@ AppAsset::register($this);
                                 <div class="list">
                                     <div class="content">
                                         <div class="row">
-                                            <div class="col-xs-6"><a href="#" class="connection-item"><?= Html::img('/img/github.png'); ?><span>Подключить<br>GitHub</span></a></div>
-                                            <div class="col-xs-6"><a href="#" class="connection-item"><?= Html::img('/img/bitbucket.png'); ?><span>Подключить<br>BitBucket</span></a></div>
+                                            <div class="col-xs-6"><a href="<?= Url::toRoute(['/services/add', 'type' => ServiceForm::TYPE_GITHUB]); ?>" class="connection-item"><?= Html::img('/img/github.png'); ?><span>Подключить<br>GitHub</span></a></div>
+                                            <div class="col-xs-6"><a href="<?= Url::toRoute(['/services/add', 'type' => ServiceForm::TYPE_BITBUCKET]); ?>" class="connection-item"><?= Html::img('/img/bitbucket.png'); ?><span>Подключить<br>BitBucket</span></a></div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="footer"><a href="#">More</a></div>
+                                <div class="footer"><a href="<?= Url::toRoute(['/services']); ?>">See all</a></div>
                             </li>
                         </ul>
                     </li>

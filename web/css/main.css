@@ -1,3 +1,8 @@
 .form-group .form-group {
     margin-bottom: 0;
 }
+
+.be-connections .list .connection-item span {
+    margin-top: 15px;
+    line-height: 20px;
+}
