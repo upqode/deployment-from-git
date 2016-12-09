@@ -60,9 +60,16 @@ $this->title = 'Services';
 
                                         <ul role="menu" class="dropdown-menu">
                                             <?php if ($service->is_active): ?>
-                                                <li><?= Html::a('Disable', ['disable', 'id' => $service->id]) ?></li>
+                                                <li>
+                                                    <?= Html::a('Deactivate', ['deactivate', 'id' => $service->id], [
+                                                        'data' => [
+                                                            'method' => 'POST',
+                                                            'confirm' => 'Are you sure you want to deactivate this service?',
+                                                        ],
+                                                    ]) ?>
+                                                </li>
                                             <?php else: ?>
-                                                <li><?= Html::a('Active', ['active', 'id' => $service->id]); ?></li>
+                                                <li><?= Html::a('Activate', ['activate', 'id' => $service->id]); ?></li>
                                             <?php endif; ?>
                                             <li><?= Html::a('Settings', ['settings', 'id' => $service->id]); ?></li>
                                             <li>

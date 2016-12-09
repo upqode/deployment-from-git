@@ -8,6 +8,7 @@ use app\models\Services;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 
 class ServicesController extends BaseController
 {
@@ -24,6 +25,13 @@ class ServicesController extends BaseController
                 'class' => AccessControl::className(),
                 'rules' => [
                     ['allow' => true, 'roles' => ['@']],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                    'deactivate' => ['POST'],
                 ],
             ],
         ];
@@ -74,6 +82,32 @@ class ServicesController extends BaseController
         }
 
         return $this->render('add', ['model' => $model]);
+    }
+
+    /**
+     * Activate service
+     *
+     * @param integer $id
+     * @return \yii\web\Response
+     */
+    public function actionActivate($id)
+    {
+        Services::setServiceStatus($id, true);
+
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * Deactivate service
+     *
+     * @param integer $id
+     * @return \yii\web\Response
+     */
+    public function actionDeactivate($id)
+    {
+        Services::setServiceStatus($id, false);
+
+        return $this->redirect(['index']);
     }
 
 }

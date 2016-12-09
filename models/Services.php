@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\models\forms\ServiceForm;
+use Yii;
 use yii\db\ActiveRecord;
 
 /**
@@ -13,7 +14,7 @@ use yii\db\ActiveRecord;
  * @property string  $username
  * @property string  $access_token
  * @property integer $created_date
- * @property integer $is_active
+ * @property boolean $is_active
  */
 class Services extends ActiveRecord
 {
@@ -32,9 +33,10 @@ class Services extends ActiveRecord
     {
         return [
             [['type', 'username', 'access_token', 'created_date'], 'required'],
-            [['type', 'created_date', 'is_active'], 'integer'],
+            [['type', 'created_date'], 'integer'],
             [['username'], 'string', 'max' => 50],
             [['access_token'], 'string', 'max' => 100],
+            ['is_active', 'boolean'],
         ];
     }
 
@@ -76,6 +78,38 @@ class Services extends ActiveRecord
     public function getRepositoryCount()
     {
         return random_int(1, 100); // @todo: change!
+    }
+
+    /**
+     * Activated/Deactivated service
+     *
+     * @param integer $id
+     * @param boolean $is_active
+     */
+    public static function setServiceStatus($id, $is_active)
+    {
+        /** @var Users $user */
+        $user = Yii::$app->user->identity;
+        $service = Services::findOne(intval($id));
+
+        if ($service && $user->is_admin) {
+            $service->is_active = $is_active;
+            $service->update();
+
+            Yii::$app->session->setFlash('serviceOperation', [
+                'type' => 'alert-success',
+                'icon' => 'mdi mdi-check',
+                'title' => 'Success!',
+                'message' => ($is_active) ? 'Service activated!' : 'Service deactivated!',
+            ]);
+        } else {
+            Yii::$app->session->setFlash('serviceOperation', [
+                'type' => 'alert-danger',
+                'icon' => 'mdi mdi-close-circle-o',
+                'title' => 'Danger!',
+                'message' => 'У вас недостаточно прав для выполнения данного действия!',
+            ]);
+        }
     }
 
 }
