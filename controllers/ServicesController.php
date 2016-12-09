@@ -63,9 +63,18 @@ class ServicesController extends BaseController
      */
     public function actionAdd($type)
     {
+        /** @var \app\models\Users $user */
+        $user = Yii::$app->user->identity;
         $model = new ServiceForm();
 
-        if ($type != $model::TYPE_GITHUB && $type != $model::TYPE_BITBUCKET) {
+        if (($type != $model::TYPE_GITHUB && $type != $model::TYPE_BITBUCKET) || !$user->is_admin) {
+            Yii::$app->session->setFlash('serviceOperation', [
+                'type' => 'alert-danger',
+                'icon' => 'mdi mdi-close-circle-o',
+                'title' => 'Danger!',
+                'message' => 'Что-то пошло не так!',
+            ]);
+
             return $this->redirect(['index']);
         }
 
@@ -106,6 +115,80 @@ class ServicesController extends BaseController
     public function actionDeactivate($id)
     {
         Services::setServiceStatus($id, false);
+
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * Change service settings
+     *
+     * @param integer $id
+     * @return string|\yii\web\Response
+     */
+    public function actionSettings($id)
+    {
+        /** @var \app\models\Users $user */
+        $user = Yii::$app->user->identity;
+        $service = Services::findOne(intval($id));
+
+        if (!$service || !$user->is_admin) {
+            Yii::$app->session->setFlash('serviceOperation', [
+                'type' => 'alert-danger',
+                'icon' => 'mdi mdi-close-circle-o',
+                'title' => 'Danger!',
+                'message' => 'Что-то пошло не так!',
+            ]);
+
+            return $this->redirect(['index']);
+        }
+
+        $model = new ServiceForm();
+        $model->attributes = $service->attributes;
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $service->attributes = $model->attributes;
+            $service->update();
+
+            Yii::$app->session->setFlash('serviceOperation', [
+                'type' => 'alert-success',
+                'icon' => 'mdi mdi-check',
+                'title' => 'Success!',
+                'message' => 'Service updated!',
+            ]);
+
+            return $this->redirect(['index']);
+        }
+
+        return $this->render('settings', ['model' => $model]);
+    }
+
+    /**
+     * Delete service
+     *
+     * @param integer $id
+     * @return \yii\web\Response
+     */
+    public function actionDelete($id)
+    {
+        /** @var \app\models\Users $user */
+        $user = Yii::$app->user->identity;
+        $service = Services::findOne(intval($id));
+
+        if ($service && $user->is_admin && $service->delete()) {
+            Yii::$app->session->setFlash('serviceOperation', [
+                'type' => 'alert-success',
+                'icon' => 'mdi mdi-check',
+                'title' => 'Success!',
+                'message' => 'Service removed!',
+            ]);
+        } else {
+            Yii::$app->session->setFlash('serviceOperation', [
+                'type' => 'alert-danger',
+                'icon' => 'mdi mdi-close-circle-o',
+                'title' => 'Danger!',
+                'message' => 'У вас недостаточно прав для выполнения данного действия!',
+            ]);
+        }
 
         return $this->redirect(['index']);
     }
