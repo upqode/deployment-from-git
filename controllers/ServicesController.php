@@ -4,7 +4,9 @@ namespace app\controllers;
 
 use app\components\BaseController;
 use app\models\forms\ServiceForm;
+use app\models\Services;
 use Yii;
+use yii\data\Pagination;
 use yii\filters\AccessControl;
 
 class ServicesController extends BaseController
@@ -27,9 +29,22 @@ class ServicesController extends BaseController
         ];
     }
 
+    /**
+     * Service list
+     *
+     * @return string
+     */
     public function actionIndex()
     {
-        return $this->render('index');
+        $query = Services::find();
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => 15]);
+        $services = $query->offset($pages->offset)->limit($pages->limit)->all();
+
+        return $this->render('index', [
+            'pages' => $pages,
+            'services' => $services,
+        ]);
     }
 
     /**

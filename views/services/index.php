@@ -1,8 +1,12 @@
 <?php
 
 /* @var $this yii\web\View */
+/* @var $pages \yii\data\Pagination */
+/* @var $service \app\models\Services */
+/* @var $services array */
 
 use yii\helpers\Html;
+use yii\widgets\LinkPager;
 
 $this->title = 'Services';
 ?>
@@ -24,39 +28,61 @@ $this->title = 'Services';
 <?php endif; ?>
 <div class="user-profile">
     <div class="row sm-mt-50">
-        <div class="col-md-4">
-            <div class="user-display">
-                <div class="user-display-bottom">
-                    <div class="user-display-avatar"><?= Html::img('/img/github-big.png'); ?></div>
-                    <div class="user-display-info">
-                        <div class="name">UpQode Company</div>
-                        <div class="nick"><span class="mdi mdi-dns"></span> GitHub</div>
-                    </div>
-                    <div class="row user-display-details">
-                        <div class="col-xs-4">
-                            <div class="title">Created</div>
-                            <div class="counter">12.12.2016</div>
-                        </div>
-                        <div class="col-xs-4">
-                            <div class="title">Repositories</div>
-                            <div class="counter">26</div>
-                        </div>
-                        <div class="col-xs-4">
-                            <div class="title">Status</div>
-                            <div class="btn-group btn-group-sm btn-hspace">
-                                <button type="button" data-toggle="dropdown" class="btn btn-rounded btn-success dropdown-toggle" aria-expanded="false">
-                                    Success <span class="icon-dropdown mdi mdi-chevron-down"></span>
-                                </button>
-                                <ul role="menu" class="dropdown-menu">
-                                    <li><a href="#">Disable</a></li>
-                                    <li><a href="#">Settings</a></li>
-                                    <li><a href="#">Delete</a></li>
-                                </ul>
+        <?php if ($services): ?>
+            <?php foreach ($services as $service): ?>
+                <div class="col-md-4">
+                    <div class="user-display">
+                        <div class="user-display-bottom">
+                            <div class="user-display-avatar">
+                                <?= Html::img($service->getServiceImg()); ?>
+                            </div>
+                            <div class="user-display-info">
+                                <div class="name"><?= $service->username ?></div>
+                                <div class="nick">
+                                    <span class="mdi mdi-dns"></span> <?= $service->getServiceName(); ?>
+                                </div>
+                            </div>
+                            <div class="row user-display-details">
+                                <div class="col-xs-4">
+                                    <div class="title">Created</div>
+                                    <div class="counter"><?= Yii::$app->formatter->asDate($service->created_date) ?></div>
+                                </div>
+                                <div class="col-xs-4">
+                                    <div class="title">Repositories</div>
+                                    <div class="counter"><?= $service->getRepositoryCount() ?></div>
+                                </div>
+                                <div class="col-xs-4">
+                                    <div class="title">Status</div>
+                                    <div class="btn-group btn-group-sm btn-hspace">
+                                        <button type="button" data-toggle="dropdown" class="btn btn-rounded dropdown-toggle <?= ($service->is_active) ? 'btn-success' : 'btn-danger'; ?>" aria-expanded="false">
+                                            <?= ($service->is_active) ? 'Active' : 'Disabled'; ?> <span class="icon-dropdown mdi mdi-chevron-down"></span>
+                                        </button>
+
+                                        <ul role="menu" class="dropdown-menu">
+                                            <?php if ($service->is_active): ?>
+                                                <li><?= Html::a('Disable', ['disable', 'id' => $service->id]) ?></li>
+                                            <?php else: ?>
+                                                <li><?= Html::a('Active', ['active', 'id' => $service->id]); ?></li>
+                                            <?php endif; ?>
+                                            <li><?= Html::a('Settings', ['settings', 'id' => $service->id]); ?></li>
+                                            <li>
+                                                <?= Html::a('Delete', ['delete', 'id' => $service->id], [
+                                                    'data' => [
+                                                        'method' => 'POST',
+                                                        'confirm' => 'Are you sure you want to delete this item?',
+                                                    ],
+                                                ]); ?>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+
+        <?= LinkPager::widget(['pagination' => $pages]); ?>
     </div>
 </div>

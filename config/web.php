@@ -8,6 +8,14 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [
+        'formatter' => [
+            'class' => 'yii\i18n\Formatter',
+            'timeZone' => 'Europe/Kiev',
+            'timeFormat' => 'HH:mm',
+            'dateFormat' => 'dd.MM.yyyy',
+            'datetimeFormat' => 'dd.MM.yyyy HH:mm',
+            'defaultTimeZone' => 'Europe/Kiev',
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => '9QQuZGZY6jiKbC9cU7CsWRHIvdUv3jqJ',

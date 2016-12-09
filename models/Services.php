@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-use Yii;
+use app\models\forms\ServiceForm;
 use yii\db\ActiveRecord;
 
 /**
@@ -52,4 +52,30 @@ class Services extends ActiveRecord
             'is_active' => 'Is Active',
         ];
     }
+
+    /**
+     * Get service image
+     *
+     * @return string
+     */
+    public function getServiceImg()
+    {
+        return ($this->type === ServiceForm::TYPE_GITHUB) ? '/img/github-big.png' : '/img/bitbucket-big.png';
+    }
+
+    /**
+     * Get service name
+     *
+     * @return string
+     */
+    public function getServiceName()
+    {
+        return ($this->type === ServiceForm::TYPE_GITHUB) ? 'GitHub' : 'BitBucket';
+    }
+
+    public function getRepositoryCount()
+    {
+        return random_int(1, 100); // @todo: change!
+    }
+
 }
