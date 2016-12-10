@@ -193,4 +193,17 @@ class ServicesController extends BaseController
         return $this->redirect(['index']);
     }
 
+    /**
+     * Test connection to service
+     *
+     * @param integer $id
+     * @return \yii\web\Response
+     */
+    public function actionTest($id)
+    {
+        Services::testApiConnection($id);
+
+        return $this->redirect(['index']);
+    }
+
 }

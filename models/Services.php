@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use app\components\BitBucket;
+use app\components\GitHub;
 use app\models\forms\ServiceForm;
 use Yii;
 use yii\db\ActiveRecord;
@@ -108,6 +110,41 @@ class Services extends ActiveRecord
                 'icon' => 'mdi mdi-close-circle-o',
                 'title' => 'Danger!',
                 'message' => 'У вас недостаточно прав для выполнения данного действия!',
+            ]);
+        }
+    }
+
+    /**
+     * Detect service type and check connection
+     *
+     * @param integer $service_id
+     */
+    public static function testApiConnection($service_id)
+    {
+        $status = false;
+        $service = Services::findOne(intval($service_id));
+
+        if ($service) {
+            if ($service->type === ServiceForm::TYPE_GITHUB) {
+                $status = GitHub::testApiConnection($service->username, $service->access_token);
+            } elseif ($service->type === ServiceForm::TYPE_BITBUCKET) {
+                $status = BitBucket::testApiConnection($service->username, $service->access_token);
+            }
+        }
+
+        if ($status) {
+            Yii::$app->session->setFlash('serviceOperation', [
+                'type' => 'alert-success',
+                'icon' => 'mdi mdi-check',
+                'title' => 'Success!',
+                'message' => 'Service connected is successful!',
+            ]);
+        } else {
+            Yii::$app->session->setFlash('serviceOperation', [
+                'type' => 'alert-danger',
+                'icon' => 'mdi mdi-close-circle-o',
+                'title' => 'Danger!',
+                'message' => 'Service connected is invalid!',
             ]);
         }
     }

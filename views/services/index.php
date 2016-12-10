@@ -71,6 +71,7 @@ $this->title = 'Services';
                                             <?php else: ?>
                                                 <li><?= Html::a('Activate', ['activate', 'id' => $service->id]); ?></li>
                                             <?php endif; ?>
+                                            <li><?= Html::a('Test connection', ['test', 'id' => $service->id]); ?></li>
                                             <li><?= Html::a('Settings', ['settings', 'id' => $service->id]); ?></li>
                                             <li>
                                                 <?= Html::a('Delete', ['delete', 'id' => $service->id], [
