@@ -13,6 +13,8 @@ use yii\db\ActiveRecord;
  * @property string  $local_path
  * @property string  $remote_path
  * @property boolean $has_auto_update
+ *
+ * @property Services $service
  */
 class Repositories extends ActiveRecord
 {
@@ -59,6 +61,16 @@ class Repositories extends ActiveRecord
     public function getService()
     {
         return $this->hasOne(Services::className(), ['id' => 'service_id']);
+    }
+
+    /**
+     * Get status On|Off for auto update
+     *
+     * @return string
+     */
+    public function getAutoUpdateStatus()
+    {
+        return $this->has_auto_update ? 'On' : 'Off';
     }
 
 }

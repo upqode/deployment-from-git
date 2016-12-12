@@ -8,9 +8,11 @@ use app\components\FileSystem;
 use app\components\GitHub;
 use app\models\forms\RepositoryForm;
 use app\models\forms\ServiceForm;
+use app\models\Repositories;
 use app\models\Services;
 use Yii;
 use yii\bootstrap\ActiveForm;
+use yii\data\Pagination;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
@@ -43,9 +45,22 @@ class RepositoryController extends BaseController
         ];
     }
 
+    /**
+     * Get repository list
+     *
+     * @return string
+     */
     public function actionIndex()
     {
-        return $this->render('index');
+        $query = Repositories::find();
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => 25]);
+        $repositories = $query->offset($pages->offset)->limit($pages->limit)->all();
+
+        return $this->render('index', [
+            'repositories' => $repositories,
+            'pages' => $pages,
+        ]);
     }
 
     /**

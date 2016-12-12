@@ -1,9 +1,13 @@
 <?php
 
 /* @var $this yii\web\View */
+/* @var $pages \yii\data\Pagination */
+/* @var $repository \app\models\Repositories */
+/* @var $repositories array */
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\widgets\LinkPager;
 
 $this->title = 'Repositories';
 ?>
@@ -27,45 +31,51 @@ $this->title = 'Repositories';
                 <div class="tools">
                     <a href="<?= Url::toRoute(['add']) ?>"><span class="icon mdi mdi-collection-plus"></span></a>
                 </div>
-                <div class="title">Latest Commits</div>
+                <div class="title">Repository list</div>
             </div>
-            <div class="panel-body table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead>
-                    <tr>
-                        <th style="width:37%;">User</th>
-                        <th style="width:36%;">Commit</th>
-                        <th>Date</th>
-                        <th class="actions"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td class="user-avatar"><?= Html::img('/img/avatar.png'); ?> Penelope Thornton</td>
-                        <td>Topbar dropdown style</td>
-                        <td>Aug 16, 2016</td>
-                        <td class="actions"><a href="#" class="icon"><i class="mdi mdi-github-alt"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td class="user-avatar"><?= Html::img('/img/avatar.png'); ?> Benji Harper</td>
-                        <td>Left sidebar adjusments</td>
-                        <td>Jul 15, 2016</td>
-                        <td class="actions"><a href="#" class="icon"><i class="mdi mdi-github-alt"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td class="user-avatar"><?= Html::img('/img/avatar.png'); ?> Justine Myranda</td>
-                        <td>Main structure markup</td>
-                        <td>Jul 28, 2016</td>
-                        <td class="actions"><a href="#" class="icon"><i class="mdi mdi-github-alt"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td class="user-avatar"><?= Html::img('/img/avatar.png'); ?> Sherwood Clifford</td>
-                        <td>Initial commit</td>
-                        <td>Jun 30, 2016</td>
-                        <td class="actions"><a href="#" class="icon"><i class="mdi mdi-github-alt"></i></a></td>
-                    </tr>
-                    </tbody>
-                </table>
+            <div class="panel-body">
+                <?php if ($repositories): ?>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Repository</th>
+                            <th>Local path</th>
+                            <th>Auto update</th>
+                            <th class="actions"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($repositories as $repository): ?>
+                            <tr>
+                                <td>
+                                    <?= $repository->service->getServiceName() ?>:
+                                    <?= $repository->service->username ?>
+                                </td>
+                                <td><?= $repository->name ?></td>
+                                <td><?= Html::encode($repository->local_path); ?></td>
+                                <td><?= $repository->getAutoUpdateStatus(); ?></td>
+                                <td class="actions">
+                                    <div class="btn-group btn-hspace">
+                                        <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+                                            Action <span class="icon-dropdown mdi mdi-chevron-down"></span>
+                                        </button>
+                                        <ul role="menu" class="dropdown-menu pull-right">
+                                            <li><a href="#">Details</a></li>
+                                            <li><a href="#">Check new version</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="#">Settings</a></li>
+                                            <li><a href="#">Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
+                    <?= LinkPager::widget(['pagination' => $pages]); ?>
+                <?php endif; ?>
             </div>
         </div>
     </div>
