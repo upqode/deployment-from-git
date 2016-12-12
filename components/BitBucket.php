@@ -21,10 +21,7 @@ class BitBucket
         $request = $client->createRequest()
             ->setUrl('repositories/'. $username)
             ->setFormat(Client::FORMAT_JSON)
-            ->addHeaders([
-                'User-Agent' => $username,
-                'Authorization' => 'Basic '. base64_encode($username .':'. $access_token)
-            ])
+            ->addHeaders(['Authorization' => 'Basic '. base64_encode($username .':'. $access_token)])
             ->send();
 
         if ($request->isOk) {
@@ -32,6 +29,31 @@ class BitBucket
         }
 
         return false;
+    }
+
+    /**
+     * Get repositories list
+     *
+     * @param string $username
+     * @param string $access_token
+     * @return array
+     */
+    public static function getRepositoriesList($username, $access_token)
+    {
+        $client = new Client(['baseUrl' => self::$baseUrl]);
+        $request = $client->createRequest()
+            ->setUrl('repositories/'. $username)
+            ->setFormat(Client::FORMAT_JSON)
+            ->addHeaders(['Authorization' => 'Basic '. base64_encode($username .':'. $access_token)])
+            ->send();
+
+        if ($request->isOk) {
+            if (isset($request->data['values'])) {
+                return $request->data['values'];
+            }
+        }
+
+        return array();
     }
 
 }

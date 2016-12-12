@@ -34,4 +34,30 @@ class GitHub
         return false;
     }
 
+    /**
+     * Get repositories list
+     *
+     * @param string $username
+     * @param string $access_token
+     * @return array
+     */
+    public static function getRepositoriesList($username, $access_token)
+    {
+        $client = new Client(['baseUrl' => self::$baseUrl]);
+        $request = $client->createRequest()
+            ->setUrl('user/repos')
+            ->setFormat(Client::FORMAT_JSON)
+            ->addHeaders([
+                'User-Agent' => $username,
+                'Authorization' => 'Basic '. base64_encode($username .':'. $access_token)
+            ])
+            ->send();
+
+        if ($request->isOk) {
+            return $request->data;
+        }
+
+        return array();
+    }
+
 }

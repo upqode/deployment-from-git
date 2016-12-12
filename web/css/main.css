@@ -6,3 +6,31 @@
     margin-top: 15px;
     line-height: 20px;
 }
+
+.spinner {
+    margin: 40px auto;
+    width: 70px;
+    text-align: center;
+}
+.spinner > span {
+    width: 12px;
+    height: 12px;
+    background-color: #5F99F5;
+    border-radius: 100%;
+    display: inline-block;
+    animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+}
+.spinner .dot1 {
+    animation-delay: -0.32s;
+}
+.spinner .dot2 {
+    animation-delay: -0.16s;
+}
+@keyframes sk-bouncedelay {
+    0%, 80%, 100% {
+        transform: scale(0);
+    }
+    40% {
+        transform: scale(1);
+    }
+}

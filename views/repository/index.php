@@ -3,14 +3,30 @@
 /* @var $this yii\web\View */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 $this->title = 'Repositories';
 ?>
 <div class="row">
     <div class="col-md-12">
+        <?php if (Yii::$app->session->hasFlash('repositoryOperation')): ?>
+            <?php $flash = Yii::$app->session->getFlash('repositoryOperation'); ?>
+            <div role="alert" class="alert alert-contrast <?= $flash['type'] ?> alert-dismissible">
+                <div class="icon"><span class="<?= $flash['icon'] ?>"></span></div>
+                <div class="message">
+                    <button type="button" data-dismiss="alert" aria-label="Close" class="close">
+                        <span aria-hidden="true" class="mdi mdi-close"></span>
+                    </button>
+                    <strong><?= $flash['title'] ?></strong> <?= $flash['message'] ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
         <div class="panel panel-default panel-table">
             <div class="panel-heading">
-                <div class="tools"><span class="icon mdi mdi-download"></span><span class="icon mdi mdi-more-vert"></span></div>
+                <div class="tools">
+                    <a href="<?= Url::toRoute(['add']) ?>"><span class="icon mdi mdi-collection-plus"></span></a>
+                </div>
                 <div class="title">Latest Commits</div>
             </div>
             <div class="panel-body table-responsive">

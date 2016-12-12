@@ -41,7 +41,7 @@ class InstallForm extends Model
             'has_edit' => true,
         ]);
 
-        return $user->save() ? true : false;
+        return $user->save();
     }
 
 }
