@@ -61,7 +61,7 @@ $this->title = 'Repositories';
                                             Action <span class="icon-dropdown mdi mdi-chevron-down"></span>
                                         </button>
                                         <ul role="menu" class="dropdown-menu pull-right">
-                                            <li><a href="#">Details</a></li>
+                                            <li><?= Html::a('Commits', ['commits', 'id' => $repository->id]); ?><li>
                                             <li><a href="#">Check new version</a></li>
                                             <li class="divider"></li>
                                             <li><?= Html::a('Settings', ['settings', 'id' => $repository->id]); ?></li>

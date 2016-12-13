@@ -246,4 +246,33 @@ class RepositoryController extends BaseController
         return $this->redirect(['index']);
     }
 
+    /**
+     * Get repository commits
+     *
+     * @param integer $id - Repository ID
+     * @return string|Response
+     */
+    public function actionCommits($id)
+    {
+        $repository = Repositories::findOne(intval($id));
+
+        if (!$repository) {
+            Yii::$app->session->setFlash('repositoryOperation', [
+                'type' => 'alert-danger',
+                'icon' => 'mdi mdi-close-circle-o',
+                'title' => 'Danger!',
+                'message' => 'Repository not found!',
+            ]);
+
+            return $this->redirect(['index']);
+        }
+
+        $commits = $repository->getRepositoryCommits();
+
+        return $this->render('commits', [
+            'commits' => $commits,
+            'repository' => $repository,
+        ]);
+    }
+
 }

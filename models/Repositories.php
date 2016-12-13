@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use app\components\GitHub;
+use app\models\forms\ServiceForm;
 use yii\db\ActiveRecord;
 
 /**
@@ -81,6 +83,24 @@ class Repositories extends ActiveRecord
     public function getAutoUpdateStatus()
     {
         return $this->has_auto_update ? 'On' : 'Off';
+    }
+
+    /**
+     * Get repository commit
+     *
+     * @return array
+     */
+    public function getRepositoryCommits()
+    {
+        $commits = array();
+
+        if ($this->service_id === ServiceForm::TYPE_GITHUB) {
+            $commits = GitHub::getCommits($this);
+        } elseif ($this->service_id === ServiceForm::TYPE_BITBUCKET) {
+            // @todo: realization for BitBucket
+        }
+
+        return $commits;
     }
 
 }
