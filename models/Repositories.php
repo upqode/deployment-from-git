@@ -8,12 +8,14 @@ use yii\db\ActiveRecord;
  * This is the model class for table "repositories".
  *
  * @property integer $id
+ * @property integer $user_id
  * @property integer $service_id
  * @property string  $name
  * @property string  $local_path
  * @property string  $remote_path
  * @property boolean $has_auto_update
  *
+ * @property Users    $user
  * @property Services $service
  */
 class Repositories extends ActiveRecord
@@ -32,8 +34,8 @@ class Repositories extends ActiveRecord
     public function rules()
     {
         return [
-            [['service_id', 'name', 'local_path', 'remote_path'], 'required'],
-            [['service_id'], 'integer'],
+            [['user_id', 'service_id', 'name', 'local_path', 'remote_path'], 'required'],
+            [['user_id', 'service_id'], 'integer'],
             [['has_auto_update'], 'boolean'],
             [['name'], 'string', 'max' => 50],
             [['local_path', 'remote_path'], 'string', 'max' => 255],
@@ -53,6 +55,14 @@ class Repositories extends ActiveRecord
             'remote_path' => 'Remote Path',
             'has_auto_update' => 'Has Auto Update',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(Users::className(), ['id' => 'user_id']);
     }
 
     /**

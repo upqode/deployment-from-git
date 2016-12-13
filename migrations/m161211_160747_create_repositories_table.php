@@ -14,6 +14,7 @@ class m161211_160747_create_repositories_table extends Migration
     {
         $this->createTable('repositories', [
             'id' => $this->primaryKey()->unsigned(),
+            'user_id' => $this->integer()->unsigned()->notNull(),
             'service_id' => $this->integer()->unsigned()->notNull(),
             'name' => $this->string(50)->notNull(),
             'local_path' => $this->string(255)->notNull(),

@@ -4,6 +4,7 @@ namespace app\models\forms;
 
 use app\models\Repositories;
 use app\models\Services;
+use Yii;
 use yii\base\Model;
 
 class RepositoryForm extends Model
@@ -71,6 +72,7 @@ class RepositoryForm extends Model
 
         $repository = new Repositories([
             'name' => $this->name,
+            'user_id' => Yii::$app->user->id,
             'service_id' => $this->service_id,
             'local_path' => $this->local_path,
             'remote_path' => $this->remote_path,
