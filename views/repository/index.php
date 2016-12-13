@@ -65,7 +65,14 @@ $this->title = 'Repositories';
                                             <li><a href="#">Check new version</a></li>
                                             <li class="divider"></li>
                                             <li><a href="#">Settings</a></li>
-                                            <li><a href="#">Delete</a></li>
+                                            <li>
+                                                <?= Html::a('Delete', ['delete', 'id' => $repository->id], [
+                                                    'data' => [
+                                                        'method' => 'POST',
+                                                        'confirm' => 'Are you sure you want to delete this item?',
+                                                    ],
+                                                ]); ?>
+                                            </li>
                                         </ul>
                                     </div>
                                 </td>

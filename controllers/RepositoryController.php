@@ -10,6 +10,7 @@ use app\models\forms\RepositoryForm;
 use app\models\forms\ServiceForm;
 use app\models\Repositories;
 use app\models\Services;
+use app\models\Users;
 use Yii;
 use yii\bootstrap\ActiveForm;
 use yii\data\Pagination;
@@ -40,6 +41,7 @@ class RepositoryController extends BaseController
                 'actions' => [
                     'get-for-remote-path' => ['POST'],
                     'get-local-path' => ['POST'],
+                    'delete' => ['POST'],
                 ],
             ],
         ];
@@ -152,6 +154,39 @@ class RepositoryController extends BaseController
         $folder_list = FileSystem::getDirInfo($dir);
 
         return Json::encode($folder_list);
+    }
+
+    /**
+     * Remove repository from system
+     *
+     * @param integer $id
+     * @return Response
+     */
+    public function actionDelete($id)
+    {
+        /** @var Users $user */
+        $user = Yii::$app->user->identity;
+        $repository = Repositories::findOne(intval($id));
+
+        if (($user->is_admin || $user->id == $repository->user_id) && $repository && $repository->delete()) {
+            // @todo: need remove all backups this repository and other data
+
+            Yii::$app->session->setFlash('repositoryOperation', [
+                'type' => 'alert-success',
+                'icon' => 'mdi mdi-check',
+                'title' => 'Success!',
+                'message' => 'Repository removed!',
+            ]);
+        } else {
+            Yii::$app->session->setFlash('repositoryOperation', [
+                'type' => 'alert-danger',
+                'icon' => 'mdi mdi-close-circle-o',
+                'title' => 'Danger!',
+                'message' => 'У вас недостаточно прав для выполнения данного действия!',
+            ]);
+        }
+
+        return $this->redirect(['index']);
     }
 
 }
