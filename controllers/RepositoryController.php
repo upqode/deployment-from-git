@@ -74,6 +74,8 @@ class RepositoryController extends BaseController
     {
         /** @var Services $service */
         $model = new RepositoryForm();
+        $model->scenario = $model::SCENARIO_CREATE;
+
         $services = Services::find()->all();
         $folder_list = FileSystem::getDirInfo();
 
@@ -154,6 +156,61 @@ class RepositoryController extends BaseController
         $folder_list = FileSystem::getDirInfo($dir);
 
         return Json::encode($folder_list);
+    }
+
+    /**
+     * Edit repository
+     *
+     * @param integer $id
+     * @return array|string|Response
+     */
+    public function actionSettings($id)
+    {
+        /** @var Users $user */
+        $user = Yii::$app->user->identity;
+        $repository = Repositories::findOne(intval($id));
+
+        if (!$repository || (!$user->is_admin && $user->id != $repository->user_id)) {
+            Yii::$app->session->setFlash('repositoryOperation', [
+                'type' => 'alert-danger',
+                'icon' => 'mdi mdi-close-circle-o',
+                'title' => 'Danger!',
+                'message' => 'Что-то пошло не так!',
+            ]);
+
+            return $this->redirect(['index']);
+        }
+
+        $model = new RepositoryForm();
+        $model->attributes = $repository->attributes;
+        $model->scenario = $model::SCENARIO_UPDATE;
+        $folder_list = FileSystem::getDirInfo($model->local_path);
+
+        // ajax model validate
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+
+        // update repository
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $repository->attributes = $model->attributes;
+            $repository->update();
+
+            Yii::$app->session->setFlash('repositoryOperation', [
+                'type' => 'alert-success',
+                'icon' => 'mdi mdi-check',
+                'title' => 'Success!',
+                'message' => 'Repository updated!',
+            ]);
+
+            return $this->redirect(['index']);
+        }
+
+        return $this->render('settings', [
+            'model' => $model,
+            'folder_list' => $folder_list,
+        ]);
     }
 
     /**

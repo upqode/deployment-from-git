@@ -9,11 +9,26 @@ use yii\base\Model;
 
 class RepositoryForm extends Model
 {
+    const SCENARIO_CREATE = 'create';
+    const SCENARIO_UPDATE = 'update';
+
     public $name;
     public $service_id;
     public $local_path;
     public $remote_path;
     public $has_auto_update;
+
+    /**
+     * @return array
+     */
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_CREATE] = ['name', 'service_id', 'local_path', 'remote_path', 'has_auto_update'];
+        $scenarios[self::SCENARIO_UPDATE] = ['local_path', 'has_auto_update'];
+
+        return $scenarios;
+    }
 
     /**
      * @return array

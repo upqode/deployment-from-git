@@ -20,18 +20,20 @@ $this->registerJsFile('/js/add-repository.js', ['depends' => ['yii\web\JqueryAss
 <?= Html::activeHiddenInput($model, 'name'); ?>
 <?= Html::hiddenInput('local_path', $folder_list['path'], ['id' => 'local-path']); ?>
 
-<?= $form->field($model, 'service_id')->dropDownList($service_list, [
-    'prompt' => 'Please, select service...',
-]); ?>
+<?php if ($model->scenario == $model::SCENARIO_CREATE): ?>
+    <?= $form->field($model, 'service_id')->dropDownList($service_list, [
+        'prompt' => 'Please, select service...',
+    ]); ?>
 
-<?= $form->field($model, 'remote_path')->widget(DepDrop::className(), [
-    'type' => DepDrop::TYPE_SELECT2,
-    'pluginOptions' => [
-        'depends' => [Html::getInputId($model, 'service_id')],
-        'placeholder' => 'Select repository...',
-        'url' => Url::toRoute(['get-for-remote-path']),
-    ],
-]); ?>
+    <?= $form->field($model, 'remote_path')->widget(DepDrop::className(), [
+        'type' => DepDrop::TYPE_SELECT2,
+        'pluginOptions' => [
+            'depends' => [Html::getInputId($model, 'service_id')],
+            'placeholder' => 'Select repository...',
+            'url' => Url::toRoute(['get-for-remote-path']),
+        ],
+    ]); ?>
+<?php endif; ?>
 
 <?= $form->field($model, 'local_path', [
     'template' => '{label}<div class="input-group">{input}<span class="input-group-btn"><button type="button" id="select-local-path-btn" class="btn btn-primary">Select</button></span></div>{error}',

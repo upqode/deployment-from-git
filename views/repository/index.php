@@ -64,7 +64,7 @@ $this->title = 'Repositories';
                                             <li><a href="#">Details</a></li>
                                             <li><a href="#">Check new version</a></li>
                                             <li class="divider"></li>
-                                            <li><a href="#">Settings</a></li>
+                                            <li><?= Html::a('Settings', ['settings', 'id' => $repository->id]); ?></li>
                                             <li>
                                                 <?= Html::a('Delete', ['delete', 'id' => $repository->id], [
                                                     'data' => [
