@@ -275,4 +275,33 @@ class RepositoryController extends BaseController
         ]);
     }
 
+    /**
+     * Get repository branches
+     *
+     * @param integer $id - Repository ID
+     * @return string|Response
+     */
+    public function actionBranches($id)
+    {
+        $repository = Repositories::findOne(intval($id));
+
+        if (!$repository) {
+            Yii::$app->session->setFlash('repositoryOperation', [
+                'type' => 'alert-danger',
+                'icon' => 'mdi mdi-close-circle-o',
+                'title' => 'Danger!',
+                'message' => 'Repository not found!',
+            ]);
+
+            return $this->redirect(['index']);
+        }
+
+        $branches = $repository->getRepositoryBranches();
+
+        return $this->render('branches', [
+            'branches' => $branches,
+            'repository' => $repository,
+        ]);
+    }
+
 }

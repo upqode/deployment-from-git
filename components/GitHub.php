@@ -86,4 +86,29 @@ class GitHub
         return array();
     }
 
+    /**
+     * Get branches
+     *
+     * @param Repositories $repository
+     * @return array
+     */
+    public static function getBranches(Repositories $repository)
+    {
+        $client = new Client(['baseUrl' => self::$baseUrl]);
+        $request = $client->createRequest()
+            ->setUrl("repos/{$repository->remote_path}/branches")
+            ->setFormat(Client::FORMAT_JSON)
+            ->addHeaders([
+                'User-Agent' => $repository->service->username,
+                'Authorization' => 'Basic '. base64_encode($repository->service->username .':'. $repository->service->access_token)
+            ])
+            ->send();
+
+        if ($request->isOk) {
+            return $request->data;
+        }
+
+        return array();
+    }
+
 }

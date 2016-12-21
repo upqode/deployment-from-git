@@ -103,4 +103,22 @@ class Repositories extends ActiveRecord
         return $commits;
     }
 
+    /**
+     * Get repository branches
+     *
+     * @return array
+     */
+    public function getRepositoryBranches()
+    {
+        $branches = array();
+
+        if ($this->service_id === ServiceForm::TYPE_GITHUB) {
+            $branches = GitHub::getBranches($this);
+        } elseif ($this->service_id === ServiceForm::TYPE_BITBUCKET) {
+            // @todo: realization for BitBucket
+        }
+
+        return $branches;
+    }
+
 }

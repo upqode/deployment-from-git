@@ -62,6 +62,7 @@ $this->title = 'Repositories';
                                         </button>
                                         <ul role="menu" class="dropdown-menu pull-right">
                                             <li><?= Html::a('Commits', ['commits', 'id' => $repository->id]); ?><li>
+                                            <li><?= Html::a('Branches', ['branches', 'id' => $repository->id]); ?><li>
                                             <li><a href="#">Check new version</a></li>
                                             <li class="divider"></li>
                                             <li><?= Html::a('Settings', ['settings', 'id' => $repository->id]); ?></li>

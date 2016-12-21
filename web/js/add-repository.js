@@ -62,8 +62,36 @@
             });
         };
 
+        // install commit
+        var installCommit = function() {
+            $('.install-commit-btn').click(function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: '/repository/install-commit',
+                    method: 'POST',
+                    data: {
+                        commit: $(this).data('commit'),
+                        repository_id: $('#repository-id').val()
+                    },
+                    dataType: 'json',
+                    beforeSend: function() {
+                    },
+                    success: function(response) {
+                        response = JSON.parse(response);
+
+                        console.log(response);
+                    },
+                    complete: function() {
+                    }
+                });
+            });
+        };
 
 
+
+
+        installCommit();
         selectLocalPath();
         getRepositoryName();
     });

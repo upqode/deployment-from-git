@@ -2,12 +2,11 @@
 
 /* @var $this yii\web\View */
 /* @var $repository \app\models\Repositories */
-/* @var $commits array */
-/* @var $commit array */
+/* @var $branches array */
 
 use yii\helpers\Html;
 
-$this->title = 'Repository Commits';
+$this->title = 'Repository Branches';
 $this->registerJsFile('/js/add-repository.js', ['depends' => ['yii\web\JqueryAsset']]);
 ?>
 <div class="row">
@@ -20,43 +19,29 @@ $this->registerJsFile('/js/add-repository.js', ['depends' => ['yii\web\JqueryAss
             </div>
             <div class="panel-body">
                 <div class="table-responsived noSwipe">
-                    <?php if ($commits): ?>
+                    <?php if ($branches): ?>
                         <table class="table table-striped table-hover">
                             <thead>
                             <tr>
-                                <th style="width: 25%;">User</th>
-                                <th style="width: 55%;">Commit</th>
-                                <th style="width: 10%;">Date</th>
-                                <th style="width: 10%;"></th>
+                                <th>Branch</th>
+                                <th>Last Commit</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <?php foreach ($commits as $commit): ?>
+                            <?php foreach ($branches as $branch): ?>
                                 <tr class="online">
-                                    <td class="user-avatar cell-detail user-info">
-                                        <?= Html::img($commit['author']['avatar_url']); ?>
-                                        <span><?= Html::encode($commit['author']['login']); ?></span>
-                                        <span class="cell-detail-description">
-                                            <?= Html::encode($commit['commit']['author']['email']); ?>
-                                        </span>
-                                    </td>
                                     <td class="cell-detail">
-                                        <span><?= Html::encode($commit['commit']['message']); ?></span>
-                                        <span class="cell-detail-description">
-                                            <?= Html::encode($commit['sha']); ?>
-                                        </span>
+                                        <span><?= Html::encode($branch['name']); ?></span>
                                     </td>
                                     <td class="cell-detail">
                                         <span>
-                                            <?= Yii::$app->formatter->asDate(Html::encode($commit['commit']['author']['date'])); ?>
-                                        </span>
-                                        <span class="cell-detail-description">
-                                            <?= Yii::$app->formatter->asTime(Html::encode($commit['commit']['author']['date'])); ?>
+                                            <?= Html::encode($branch['commit']['sha']); ?>
                                         </span>
                                     </td>
                                     <td class="text-right">
                                         <div class="btn-group btn-hspace">
-                                            <a href="#" class="btn btn-space btn-default install-commit-btn" data-commit="<?= $commit['sha'] ?>">
+                                            <a href="#" class="btn btn-space btn-default install-commit-btn" data-commit="<?= $branch['name'] ?>">
                                                 <i class="icon icon-left mdi mdi-download"></i> Install this version
                                             </a>
                                         </div>
