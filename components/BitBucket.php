@@ -85,19 +85,22 @@ class BitBucket
      * Get branches
      *
      * @param Repositories $repository
+     * @param string $branch
      * @return array
      */
-    public static function getBranches(Repositories $repository)
+    public static function getBranches(Repositories $repository, $branch = '')
     {
         $client = new Client(['baseUrl' => self::$baseUrl]);
         $request = $client->createRequest()
-            ->setUrl("repositories/{$repository->remote_path}/refs/branches")
+            ->setUrl("repositories/{$repository->remote_path}/refs/branches/{$branch}")
             ->setFormat(Client::FORMAT_JSON)
             ->addHeaders(['Authorization' => 'Basic '. base64_encode($repository->service->username .':'. $repository->service->access_token)])
             ->send();
 
         if ($request->isOk) {
-            if (isset($request->data['values'])) {
+            if ($branch) {
+                return $request->data;
+            } elseif (isset($request->data['values'])) {
                 return $request->data['values'];
             }
         }

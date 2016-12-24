@@ -337,4 +337,42 @@ class RepositoryController extends BaseController
         }
     }
 
+    /**
+     * Check repository on availability new version
+     *
+     * @param integer $id - repository id
+     * @return Response
+     */
+    public function actionCheck($id)
+    {
+        $repository = Repositories::findOne(intval($id));
+
+        if (!$repository) {
+            Yii::$app->session->setFlash('repositoryOperation', [
+                'type' => 'alert-danger',
+                'icon' => 'mdi mdi-close-circle-o',
+                'title' => 'Danger!',
+                'message' => 'Repository not found!',
+            ]);
+        }
+
+        if ($repository->hasNewVersion()) {
+            Yii::$app->session->setFlash('repositoryOperation', [
+                'type' => 'alert-warning',
+                'icon' => 'mdi mdi-alert-triangle',
+                'title' => 'Warning!',
+                'message' => 'You use not latest version!',
+            ]);
+        } else {
+            Yii::$app->session->setFlash('repositoryOperation', [
+                'type' => 'alert-primary',
+                'icon' => 'mdi mdi-info-outline',
+                'title' => 'Info!',
+                'message' => 'You use the latest version!',
+            ]);
+        }
+
+        return $this->redirect(['index']);
+    }
+
 }

@@ -90,13 +90,17 @@ class GitHub
      * Get branches
      *
      * @param Repositories $repository
+     * @param string $branch
      * @return array
      */
-    public static function getBranches(Repositories $repository)
+    public static function getBranches(Repositories $repository, $branch = '')
     {
+        $url = "repos/{$repository->remote_path}/branches/{$branch}";
+        $url = rtrim($url, '/');
+
         $client = new Client(['baseUrl' => self::$baseUrl]);
         $request = $client->createRequest()
-            ->setUrl("repos/{$repository->remote_path}/branches")
+            ->setUrl($url)
             ->setFormat(Client::FORMAT_JSON)
             ->addHeaders([
                 'User-Agent' => $repository->service->username,

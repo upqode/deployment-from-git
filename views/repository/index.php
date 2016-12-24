@@ -49,8 +49,7 @@ $this->title = 'Repositories';
                         <?php foreach ($repositories as $repository): ?>
                             <tr>
                                 <td>
-                                    <?= $repository->service->getServiceName() ?>:
-                                    <?= $repository->service->username ?>
+                                    <?= $repository->service->getServiceName() ?>: <?= $repository->service->username ?>
                                 </td>
                                 <td><?= $repository->name ?></td>
                                 <td><?= Html::encode($repository->local_path); ?></td>
@@ -63,7 +62,7 @@ $this->title = 'Repositories';
                                         <ul role="menu" class="dropdown-menu pull-right">
                                             <li><?= Html::a('Commits', ['commits', 'id' => $repository->id]); ?><li>
                                             <li><?= Html::a('Branches', ['branches', 'id' => $repository->id]); ?><li>
-                                            <li><a href="#">Check new version</a></li>
+                                            <li><?= Html::a('Check new version', ['check', 'id' => $repository->id]); ?></li>
                                             <li class="divider"></li>
                                             <li><?= Html::a('Settings', ['settings', 'id' => $repository->id]); ?></li>
                                             <li>

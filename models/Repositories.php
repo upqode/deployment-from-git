@@ -7,6 +7,7 @@ use app\components\GitHub;
 use app\models\forms\ServiceForm;
 use yii\base\ErrorException;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "repositories".
@@ -117,16 +118,17 @@ class Repositories extends ActiveRecord
     /**
      * Get repository branches
      *
+     * @param string $branch
      * @return array
      */
-    public function getRepositoryBranches()
+    public function getRepositoryBranches($branch = '')
     {
         $branches = array();
 
         if ($this->service_id === ServiceForm::TYPE_GITHUB) {
-            $branches = GitHub::getBranches($this);
+            $branches = GitHub::getBranches($this, $branch);
         } elseif ($this->service_id === ServiceForm::TYPE_BITBUCKET) {
-            $branches = BitBucket::getBranches($this);
+            $branches = BitBucket::getBranches($this, $branch);
         }
 
         return $branches;
@@ -148,6 +150,26 @@ class Repositories extends ActiveRecord
         }
 
         throw new ErrorException('Archive not download!');
+    }
+
+    /**
+     * Check this repository on availability new version
+     *
+     * @return bool
+     */
+    public function hasNewVersion()
+    {
+        $remote_old_commit = null;
+        $local_old_commit = Commits::find()->select('sha')->where(['repository_id' => $this->id])->one();
+        $branch_info = $this->getRepositoryBranches('master');
+
+        if ($this->service_id === ServiceForm::TYPE_GITHUB) {
+            $remote_old_commit = ArrayHelper::getValue($branch_info, 'commit.sha');
+        } elseif ($this->service_id === ServiceForm::TYPE_BITBUCKET) {
+            $remote_old_commit = ArrayHelper::getValue($branch_info, 'target.hash');
+        }
+
+        return ($remote_old_commit != $local_old_commit['sha']) ? true : false;
     }
 
 }
