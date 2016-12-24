@@ -85,7 +85,6 @@
                         data: {
                             force: this_btn.data('force'),
                             commit: this_btn.data('commit'),
-                            need_install: this_btn.data('install'),
                             repository_id: $('#repository-id').val()
                         },
                         dataType: 'json',

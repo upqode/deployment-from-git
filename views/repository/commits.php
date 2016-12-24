@@ -3,11 +3,13 @@
 /* @var $this yii\web\View */
 /* @var $repository \app\models\Repositories */
 /* @var $commits array */
-/* @var $commit array */
 
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
 $this->title = 'Repository Commits';
+$this->registerCssFile('/library/sweetalert/sweetalert.css');
+$this->registerJsFile('/library/sweetalert/sweetalert.min.js', ['depends' => ['yii\web\JqueryAsset']]);
 $this->registerJsFile('/js/add-repository.js', ['depends' => ['yii\web\JqueryAsset']]);
 ?>
 <div class="row">
@@ -32,7 +34,7 @@ $this->registerJsFile('/js/add-repository.js', ['depends' => ['yii\web\JqueryAss
                             </thead>
                             <tbody>
                             <?php foreach ($commits as $commit): ?>
-                                <tr class="online">
+                                <tr class="<?= ($commit['sha'] == ArrayHelper::getValue($repository->commit, 'sha')) ? 'online' : ''; ?>">
                                     <td class="user-avatar cell-detail user-info">
                                         <?= Html::img($commit['author']['avatar_url']); ?>
                                         <span><?= Html::encode($commit['author']['login']); ?></span>

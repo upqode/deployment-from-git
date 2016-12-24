@@ -316,7 +316,6 @@ class RepositoryController extends BaseController
     {
         $force = Yii::$app->request->post('force');
         $commit = Yii::$app->request->post('commit');
-        $need_install = Yii::$app->request->post('need_install');
         $repository_id = Yii::$app->request->post('repository_id');
 
         $force = ('true' === $force) ? true : false;
@@ -327,7 +326,7 @@ class RepositoryController extends BaseController
             return Json::encode(['result' => 'Repository not found!']);
         }
 
-        $install_commit = Deployment::installCommit($repository, $need_install, $force);
+        $install_commit = Deployment::installCommit($repository, $commit, $force);
 
         if (true === $install_commit) {
             Commits::saveInstalledCommitInfo($repository_id, $commit);
