@@ -111,4 +111,33 @@ class GitHub
         return array();
     }
 
+    /**
+     * Download repository archive
+     *
+     * @param Repositories $repository
+     * @param string $commit
+     * @return bool|string
+     */
+    public static function saveArchive(Repositories $repository, $commit)
+    {
+        $client = new Client([
+            'baseUrl' => self::$baseUrl,
+            'transport' => 'yii\httpclient\CurlTransport',
+        ]);
+        $request = $client->createRequest()
+            ->setUrl("repos/{$repository->remote_path}/zipball/{$commit}")
+            ->setFormat(Client::FORMAT_JSON)
+            ->addHeaders([
+                'User-Agent' => $repository->service->username,
+                'Authorization' => 'Basic '. base64_encode($repository->service->username .':'. $repository->service->access_token)
+            ])
+            ->send();
+
+        if ($request->statusCode == 302) {
+            return FileSystem::saveStreamFile($repository->remote_path, $request->headers['location']);
+        }
+
+        return false;
+    }
+
 }

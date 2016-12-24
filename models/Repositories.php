@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\components\GitHub;
 use app\models\forms\ServiceForm;
+use yii\base\ErrorException;
 use yii\db\ActiveRecord;
 
 /**
@@ -119,6 +120,24 @@ class Repositories extends ActiveRecord
         }
 
         return $branches;
+    }
+
+    /**
+     * Save archive from repository
+     *
+     * @param string $commit
+     * @return bool|string
+     * @throws ErrorException
+     */
+    public function saveRemoteArchive($commit)
+    {
+        if ($this->service_id === ServiceForm::TYPE_GITHUB) {
+            return GitHub::saveArchive($this, $commit);
+        } elseif ($this->service_id === ServiceForm::TYPE_BITBUCKET) {
+            // @todo: realization for BitBucket
+        }
+
+        throw new ErrorException('Archive not download!');
     }
 
 }

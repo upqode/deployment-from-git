@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\components\BaseController;
 use app\components\BitBucket;
+use app\components\Deployment;
 use app\components\FileSystem;
 use app\components\GitHub;
 use app\models\forms\RepositoryForm;
@@ -41,6 +42,7 @@ class RepositoryController extends BaseController
                 'actions' => [
                     'get-for-remote-path' => ['POST'],
                     'get-local-path' => ['POST'],
+                    'install-commit' => ['POST'],
                     'delete' => ['POST'],
                 ],
             ],
@@ -302,6 +304,35 @@ class RepositoryController extends BaseController
             'branches' => $branches,
             'repository' => $repository,
         ]);
+    }
+
+    /**
+     * Install commit or branches
+     *
+     * @return string
+     */
+    public function actionInstallCommit()
+    {
+        $force = Yii::$app->request->post('force');
+        $commit = Yii::$app->request->post('commit');
+        $repository_id = Yii::$app->request->post('repository_id');
+
+        $force = ('true' === $force) ? true : false;
+        $repository = Repositories::findOne(intval($repository_id));
+
+        if (!$repository) {
+            Yii::$app->response->setStatusCode(400);
+            return Json::encode(['result' => 'Repository not found!']);
+        }
+
+        $install_commit = Deployment::installCommit($repository, $commit, $force);
+
+        if (true === $install_commit) {
+            return Json::encode(['result' => 'Commit has been installed!']);
+        } else {
+            Yii::$app->response->setStatusCode(400);
+            return Json::encode(['result' => $install_commit]);
+        }
     }
 
 }

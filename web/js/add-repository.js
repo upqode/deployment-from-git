@@ -66,24 +66,35 @@
         var installCommit = function() {
             $('.install-commit-btn').click(function(e) {
                 e.preventDefault();
+                var this_btn = $(this);
 
-                $.ajax({
-                    url: '/repository/install-commit',
-                    method: 'POST',
-                    data: {
-                        commit: $(this).data('commit'),
-                        repository_id: $('#repository-id').val()
-                    },
-                    dataType: 'json',
-                    beforeSend: function() {
-                    },
-                    success: function(response) {
-                        response = JSON.parse(response);
-
-                        console.log(response);
-                    },
-                    complete: function() {
-                    }
+                swal({
+                    title: 'Вы уверены?',
+                    text: 'Выполнение данного действия приведет к установки выбранной версии продукта.',
+                    type: 'warning',
+                    customClass: 'add-repository-modal-alert',
+                    closeOnConfirm: false,
+                    showCancelButton: true,
+                    showLoaderOnConfirm: true
+                },
+                function() {
+                    $.ajax({
+                        url: '/repository/install-commit',
+                        cache: false,
+                        method: 'POST',
+                        data: {
+                            force: this_btn.data('force'),
+                            commit: this_btn.data('commit'),
+                            repository_id: $('#repository-id').val()
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            swal({title: response['result'], type: 'success'});
+                        },
+                        error: function(response) {
+                            swal({title: response['result'], type: 'error'});
+                        }
+                    });
                 });
             });
         };

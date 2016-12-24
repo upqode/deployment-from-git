@@ -2,7 +2,9 @@
 
 namespace app\components;
 
+use Yii;
 use yii\base\ErrorException;
+use yii\helpers\ArrayHelper;
 
 class FileSystem
 {
@@ -39,6 +41,168 @@ class FileSystem
         array_unshift($dir_list, '..'); // for level up
 
         return ['path' => getcwd(), 'dir_list' => $dir_list];
+    }
+
+    /**
+     * Get folder for repository action
+     *
+     * @param string $repository - remote path
+     * @param string $dir
+     * @return string
+     */
+    public static function getRepositoryDir($repository, $dir = '')
+    {
+        $backup_dir = Yii::getAlias(Yii::$app->params['backupsDir']);
+        return "{$backup_dir}/{$repository}/{$dir}";
+    }
+
+    /**
+     * Create archive from folder
+     *
+     * @param string $name
+     * @param string $source
+     * @return bool
+     */
+    public static function createZipArchive($name, $source)
+    {
+        if (!class_exists('ZipArchive') || !file_exists($source)) {
+            return false;
+        }
+
+        $zip = new \ZipArchive();
+        if ($zip->open($name, \ZipArchive::CREATE) !== true) {
+            return false;
+        }
+
+        $source = str_replace('\\', '/', realpath($source));
+
+        if (is_dir($source)) {
+            $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($source), \RecursiveIteratorIterator::SELF_FIRST);
+
+            foreach ($files as $file) {
+                $file = str_replace('\\', '/', $file);
+
+                // Ignore "." and ".." folders
+                if (in_array(substr($file, strrpos($file, '/') + 1), array('.', '..')))
+                    continue;
+
+                $file = realpath($file);
+
+                if (is_dir($file)) {
+                    $zip->addEmptyDir(str_replace("{$source}/", '', "{$file}/"));
+                } elseif (is_file($file)) {
+                    clearstatcache(true, $file);
+                    $zip->addFromString(str_replace("{$source}/", '', $file), file_get_contents($file));
+                }
+            }
+        } elseif (is_file($source)) {
+            clearstatcache(true, $source);
+            $zip->addFromString(basename($source), file_get_contents($source));
+        }
+
+        return $zip->close();
+    }
+
+    /**
+     * Save stream as file
+     *
+     * @param string $dir - save to
+     * @param string $stream - download link
+     * @return string - saved file name
+     * @throws ErrorException
+     */
+    public static function saveStreamFile($dir, $stream)
+    {
+        @set_time_limit(100);
+        $headers = get_headers($stream, 1);
+        $content_disposition = ArrayHelper::getValue($headers, 'Content-Disposition');
+        $filename = substr($content_disposition, (strrpos($content_disposition, '=') + 1));
+
+        $backup_project_dir = FileSystem::getRepositoryDir($dir, 'tmp');
+        $full_name = $backup_project_dir .'/'. $filename;
+
+        if (!file_exists($backup_project_dir)) {
+            mkdir($backup_project_dir, 0777, true);
+        }
+
+        if (file_put_contents($full_name, file_get_contents($stream))) {
+            return $full_name;
+        }
+
+        throw new ErrorException('Archive not download!');
+    }
+
+    /**
+     * Archive extract
+     *
+     * @param string $archive
+     * @return bool
+     * @throws ErrorException
+     */
+    public static function extractArchive($archive)
+    {
+        @set_time_limit(100);
+        $zip = new \ZipArchive();
+        $filename = substr($archive, strrpos($archive, '/'));
+        $folder_name = str_replace($filename, '', $archive);
+
+        if ($zip->open($archive) === true) {
+            $zip->extractTo($folder_name);
+            return $zip->close();
+        } else {
+            throw new ErrorException('Archive not extract!');
+        }
+    }
+
+    /**
+     * Copy files from folder
+     *
+     * @param string $from
+     * @param string $to
+     */
+    public static function copyFiles($from, $to)
+    {
+        @set_time_limit(100);
+        if ($handle = opendir($from)) {
+            while (false !== ($entry = readdir($handle))) {
+                if ($entry != '.' && $entry != '..') {
+                    if (is_dir("{$from}/{$entry}")) {
+                        @mkdir("{$to}/{$entry}", 0755, true);
+                        self::copyFiles("{$from}/{$entry}", "{$to}/{$entry}");
+                    } else {
+                        copy("{$from}/{$entry}", "{$to}/{$entry}");
+                    }
+                }
+            }
+
+            closedir($handle);
+        }
+    }
+
+    /**
+     * Remove dir with all files
+     *
+     * @param string $dir
+     * @param bool $include_self
+     */
+    public static function removeDir($dir, $include_self = true)
+    {
+        @set_time_limit(100);
+        if (is_dir($dir)) {
+            $files = glob("{$dir}/*");
+
+            foreach ($files as $file) {
+                is_dir($file) ? self::removeDir($file) : unlink($file);
+            }
+
+            if ($include_self) {
+                rmdir($dir);
+            }
+        }
+
+        if (is_file($dir)) {
+            unlink($dir);
+        }
     }
 
 }

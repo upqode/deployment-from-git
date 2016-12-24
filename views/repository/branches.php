@@ -7,6 +7,8 @@
 use yii\helpers\Html;
 
 $this->title = 'Repository Branches';
+$this->registerCssFile('/library/sweetalert/sweetalert.css');
+$this->registerJsFile('/library/sweetalert/sweetalert.min.js', ['depends' => ['yii\web\JqueryAsset']]);
 $this->registerJsFile('/js/add-repository.js', ['depends' => ['yii\web\JqueryAsset']]);
 ?>
 <div class="row">
@@ -41,7 +43,7 @@ $this->registerJsFile('/js/add-repository.js', ['depends' => ['yii\web\JqueryAss
                                     </td>
                                     <td class="text-right">
                                         <div class="btn-group btn-hspace">
-                                            <a href="#" class="btn btn-space btn-default install-commit-btn" data-commit="<?= $branch['name'] ?>">
+                                            <a href="#" class="btn btn-space btn-default install-commit-btn" data-commit="<?= $branch['name'] ?>" data-force="true">
                                                 <i class="icon icon-left mdi mdi-download"></i> Install this version
                                             </a>
                                         </div>
