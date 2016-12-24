@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\BitBucket;
 use app\components\GitHub;
 use app\models\forms\ServiceForm;
 use yii\base\ErrorException;
@@ -107,7 +108,7 @@ class Repositories extends ActiveRecord
         if ($this->service_id === ServiceForm::TYPE_GITHUB) {
             $commits = GitHub::getCommits($this);
         } elseif ($this->service_id === ServiceForm::TYPE_BITBUCKET) {
-            // @todo: realization for BitBucket
+            $commits = BitBucket::getCommits($this);
         }
 
         return $commits;
@@ -125,7 +126,7 @@ class Repositories extends ActiveRecord
         if ($this->service_id === ServiceForm::TYPE_GITHUB) {
             $branches = GitHub::getBranches($this);
         } elseif ($this->service_id === ServiceForm::TYPE_BITBUCKET) {
-            // @todo: realization for BitBucket
+            $branches = BitBucket::getBranches($this);
         }
 
         return $branches;
@@ -143,7 +144,7 @@ class Repositories extends ActiveRecord
         if ($this->service_id === ServiceForm::TYPE_GITHUB) {
             return GitHub::saveArchive($this, $commit);
         } elseif ($this->service_id === ServiceForm::TYPE_BITBUCKET) {
-            // @todo: realization for BitBucket
+            return BitBucket::saveArchive($this, $commit);
         }
 
         throw new ErrorException('Archive not download!');

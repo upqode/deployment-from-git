@@ -34,31 +34,31 @@ $this->registerJsFile('/js/add-repository.js', ['depends' => ['yii\web\JqueryAss
                             </thead>
                             <tbody>
                             <?php foreach ($commits as $commit): ?>
-                                <tr class="<?= ($commit['sha'] == ArrayHelper::getValue($repository->commit, 'sha')) ? 'online' : ''; ?>">
+                                <tr class="<?= ($commit['hash'] == ArrayHelper::getValue($repository->commit, 'sha')) ? 'online' : ''; ?>">
                                     <td class="user-avatar cell-detail user-info">
-                                        <?= Html::img($commit['author']['avatar_url']); ?>
-                                        <span><?= Html::encode($commit['author']['login']); ?></span>
+                                        <?= Html::img($commit['author']['user']['links']['avatar']['href']); ?>
+                                        <span><?= Html::encode($commit['author']['user']['display_name']); ?></span>
                                         <span class="cell-detail-description">
-                                            <?= Html::encode($commit['commit']['author']['email']); ?>
+                                            <?= Html::encode($commit['author']['raw']); ?>
                                         </span>
                                     </td>
                                     <td class="cell-detail">
-                                        <span><?= Html::encode($commit['commit']['message']); ?></span>
+                                        <span><?= Html::encode($commit['message']); ?></span>
                                         <span class="cell-detail-description">
-                                            <?= Html::encode($commit['sha']); ?>
+                                            <?= Html::encode($commit['hash']); ?>
                                         </span>
                                     </td>
                                     <td class="cell-detail">
                                         <span>
-                                            <?= Yii::$app->formatter->asDate(Html::encode($commit['commit']['author']['date'])); ?>
+                                            <?= Yii::$app->formatter->asDate(Html::encode($commit['date'])); ?>
                                         </span>
                                         <span class="cell-detail-description">
-                                            <?= Yii::$app->formatter->asTime(Html::encode($commit['commit']['author']['date'])); ?>
+                                            <?= Yii::$app->formatter->asTime(Html::encode($commit['date'])); ?>
                                         </span>
                                     </td>
                                     <td class="text-right">
                                         <div class="btn-group btn-hspace">
-                                            <a href="#" class="btn btn-space btn-default install-commit-btn" data-commit="<?= $commit['sha'] ?>">
+                                            <a href="#" class="btn btn-space btn-default install-commit-btn" data-commit="<?= $commit['hash'] ?>">
                                                 <i class="icon icon-left mdi mdi-download"></i> Install this version
                                             </a>
                                         </div>
@@ -67,6 +67,8 @@ $this->registerJsFile('/js/add-repository.js', ['depends' => ['yii\web\JqueryAss
                             <?php endforeach; ?>
                             </tbody>
                         </table>
+                    <?php else: ?>
+                        <h1 class="text-center">Commits not found!</h1>
                     <?php endif; ?>
                 </div>
             </div>

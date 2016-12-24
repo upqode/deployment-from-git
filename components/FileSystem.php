@@ -108,14 +108,20 @@ class FileSystem
      *
      * @param string $dir - save to
      * @param string $stream - download link
+     * @param string $auth - authorization header
      * @return string - saved file name
      * @throws ErrorException
      */
-    public static function saveStreamFile($dir, $stream)
+    public static function saveStreamFile($dir, $stream, $auth = '')
     {
         @set_time_limit(100);
-        $headers = get_headers($stream, 1);
-        $content_disposition = ArrayHelper::getValue($headers, 'Content-Disposition');
+
+        if (!empty($auth)) {
+            stream_context_set_default(['http' => ['header' => "Authorization: {$auth}"]]);
+        }
+
+        $headers = array_change_key_case(get_headers($stream, 1), CASE_LOWER);
+        $content_disposition = ArrayHelper::getValue($headers, 'content-disposition');
         $filename = substr($content_disposition, (strrpos($content_disposition, '=') + 1));
 
         $backup_project_dir = FileSystem::getRepositoryDir($dir, 'tmp');
@@ -189,9 +195,14 @@ class FileSystem
     {
         @set_time_limit(100);
         if (is_dir($dir)) {
-            $files = glob("{$dir}/*");
+            $files = glob("{$dir}/{,.}*", GLOB_BRACE);
 
             foreach ($files as $file) {
+                // Ignore "." and ".." folders
+                if (in_array(substr($file, strrpos($file, '/') + 1), array('.', '..'))) {
+                    continue;
+                }
+
                 is_dir($file) ? self::removeDir($file) : unlink($file);
             }
 

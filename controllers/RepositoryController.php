@@ -271,8 +271,9 @@ class RepositoryController extends BaseController
         }
 
         $commits = $repository->getRepositoryCommits();
+        $service_name = strtolower($repository->service->getServiceName());
 
-        return $this->render('commits', [
+        return $this->render("commits-{$service_name}", [
             'commits' => $commits,
             'repository' => $repository,
         ]);
@@ -300,8 +301,9 @@ class RepositoryController extends BaseController
         }
 
         $branches = $repository->getRepositoryBranches();
+        $service_name = strtolower($repository->service->getServiceName());
 
-        return $this->render('branches', [
+        return $this->render("branches-{$service_name}", [
             'branches' => $branches,
             'repository' => $repository,
         ]);

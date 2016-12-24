@@ -2,6 +2,7 @@
 
 namespace app\components;
 
+use app\models\Repositories;
 use yii\httpclient\Client;
 
 class BitBucket
@@ -54,6 +55,69 @@ class BitBucket
         }
 
         return array();
+    }
+
+    /**
+     * Get commits
+     *
+     * @param Repositories $repository
+     * @return array
+     */
+    public static function getCommits(Repositories $repository)
+    {
+        $client = new Client(['baseUrl' => self::$baseUrl]);
+        $request = $client->createRequest()
+            ->setUrl("repositories/{$repository->remote_path}/commits")
+            ->setFormat(Client::FORMAT_JSON)
+            ->addHeaders(['Authorization' => 'Basic '. base64_encode($repository->service->username .':'. $repository->service->access_token)])
+            ->send();
+
+        if ($request->isOk) {
+            if (isset($request->data['values'])) {
+                return $request->data['values'];
+            }
+        }
+
+        return array();
+    }
+
+    /**
+     * Get branches
+     *
+     * @param Repositories $repository
+     * @return array
+     */
+    public static function getBranches(Repositories $repository)
+    {
+        $client = new Client(['baseUrl' => self::$baseUrl]);
+        $request = $client->createRequest()
+            ->setUrl("repositories/{$repository->remote_path}/refs/branches")
+            ->setFormat(Client::FORMAT_JSON)
+            ->addHeaders(['Authorization' => 'Basic '. base64_encode($repository->service->username .':'. $repository->service->access_token)])
+            ->send();
+
+        if ($request->isOk) {
+            if (isset($request->data['values'])) {
+                return $request->data['values'];
+            }
+        }
+
+        return array();
+    }
+
+    /**
+     * Download repository archive
+     *
+     * @param Repositories $repository
+     * @param string $commit
+     * @return string
+     */
+    public static function saveArchive(Repositories $repository, $commit)
+    {
+        $url = "https://bitbucket.org/{$repository->remote_path}/get/{$commit}.zip";
+        $authorization = 'Basic '. base64_encode($repository->service->username .':'. $repository->service->access_token);
+
+        return FileSystem::saveStreamFile($repository->remote_path, $url, $authorization);
     }
 
 }
