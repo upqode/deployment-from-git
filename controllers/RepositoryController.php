@@ -7,6 +7,7 @@ use app\components\BitBucket;
 use app\components\Deployment;
 use app\components\FileSystem;
 use app\components\GitHub;
+use app\models\Commits;
 use app\models\forms\RepositoryForm;
 use app\models\forms\ServiceForm;
 use app\models\Repositories;
@@ -315,6 +316,7 @@ class RepositoryController extends BaseController
     {
         $force = Yii::$app->request->post('force');
         $commit = Yii::$app->request->post('commit');
+        $need_install = Yii::$app->request->post('need_install');
         $repository_id = Yii::$app->request->post('repository_id');
 
         $force = ('true' === $force) ? true : false;
@@ -325,9 +327,10 @@ class RepositoryController extends BaseController
             return Json::encode(['result' => 'Repository not found!']);
         }
 
-        $install_commit = Deployment::installCommit($repository, $commit, $force);
+        $install_commit = Deployment::installCommit($repository, $need_install, $force);
 
         if (true === $install_commit) {
+            Commits::saveInstalledCommitInfo($repository_id, $commit);
             return Json::encode(['result' => 'Commit has been installed!']);
         } else {
             Yii::$app->response->setStatusCode(400);

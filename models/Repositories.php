@@ -19,6 +19,7 @@ use yii\db\ActiveRecord;
  * @property boolean $has_auto_update
  *
  * @property Users    $user
+ * @property Commits  $commit
  * @property Services $service
  */
 class Repositories extends ActiveRecord
@@ -66,6 +67,14 @@ class Repositories extends ActiveRecord
     public function getUser()
     {
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCommit()
+    {
+        return $this->hasOne(Commits::className(), ['repository_id' => 'id']);
     }
 
     /**
