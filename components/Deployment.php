@@ -14,10 +14,9 @@ class Deployment
      *
      * @param Repositories $repository
      * @param string $commit
-     * @param bool $force
      * @return bool|string
      */
-    public static function installCommit(Repositories $repository, $commit, $force = false)
+    public static function installCommit(Repositories $repository, $commit)
     {
         try {
             // create local backup
@@ -30,14 +29,10 @@ class Deployment
             FileSystem::extractArchive($saved_file);
 
             // clear previous version
-            if (true === $force) {
-                FileSystem::removeDir($repository->local_path, false);
-            }
-
-            // need variable for copy new files
-            $repository_extract_folder = str_replace('.zip', '', $saved_file);
+            FileSystem::removeDir($repository->local_path, false);
 
             // copy new files
+            $repository_extract_folder = str_replace('.zip', '', $saved_file);
             FileSystem::copyFiles($repository_extract_folder, $repository->local_path);
 
             // remove tmp files

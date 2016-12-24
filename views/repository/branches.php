@@ -44,7 +44,7 @@ $this->registerJsFile('/js/add-repository.js', ['depends' => ['yii\web\JqueryAss
                                     </td>
                                     <td class="text-right">
                                         <div class="btn-group btn-hspace">
-                                            <a href="#" class="btn btn-space btn-default install-commit-btn" data-commit="<?= $branch['commit']['sha'] ?>" data-force="true">
+                                            <a href="#" class="btn btn-space btn-default install-commit-btn" data-commit="<?= $branch['commit']['sha'] ?>">
                                                 <i class="icon icon-left mdi mdi-download"></i> Install this version
                                             </a>
                                         </div>

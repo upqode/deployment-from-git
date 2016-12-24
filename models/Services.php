@@ -77,9 +77,14 @@ class Services extends ActiveRecord
         return ($this->type === ServiceForm::TYPE_GITHUB) ? 'GitHub' : 'BitBucket';
     }
 
+    /**
+     * Count repository this service
+     *
+     * @return int|string
+     */
     public function getRepositoryCount()
     {
-        return random_int(1, 100); // @todo: change!
+        return Repositories::find()->where(['service_id' => $this->id])->count();
     }
 
     /**
