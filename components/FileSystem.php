@@ -50,7 +50,7 @@ class FileSystem
      * @param string $dir
      * @return string
      */
-    public static function getRepositoryDir($repository, $dir = '')
+    public static function getRepositoryDir($repository, $dir = 'archives')
     {
         $backup_dir = Yii::getAlias(Yii::$app->params['backupsDir']);
         return "{$backup_dir}/{$repository}/{$dir}";

@@ -9,6 +9,19 @@ $this->title = 'Backups List';
 ?>
 <div class="row">
     <div class="col-md-12">
+        <?php if (Yii::$app->session->hasFlash('backupOperation')): ?>
+            <?php $flash = Yii::$app->session->getFlash('backupOperation'); ?>
+            <div role="alert" class="alert alert-contrast <?= $flash['type'] ?> alert-dismissible">
+                <div class="icon"><span class="<?= $flash['icon'] ?>"></span></div>
+                <div class="message">
+                    <button type="button" data-dismiss="alert" aria-label="Close" class="close">
+                        <span aria-hidden="true" class="mdi mdi-close"></span>
+                    </button>
+                    <strong><?= $flash['title'] ?></strong> <?= $flash['message'] ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
         <div class="panel panel-default panel-table">
             <div class="panel-heading">Repository List
                 <div class="tools"></div>
@@ -49,6 +62,8 @@ $this->title = 'Backups List';
                             <?php endforeach; ?>
                             </tbody>
                         </table>
+                    <?php else: ?>
+                        <p class="lead text-center xs-mt-15">Backups is not defined!</p>
                     <?php endif; ?>
                 </div>
             </div>

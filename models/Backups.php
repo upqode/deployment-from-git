@@ -58,6 +58,19 @@ class Backups extends ActiveRecord
     }
 
     /**
+     * Get path to backup
+     *
+     * @param string $repository - remote path
+     * @param integer $time
+     * @return string
+     */
+    public function getBackupPath($repository, $time)
+    {
+        $dir = FileSystem::getRepositoryDir($repository);
+        return $dir .'/'. date('d_m_Y_H_i_s', $time) .'.zip';
+    }
+
+    /**
      * Prepare for create backup and register log in db
      *
      * @param Repositories $repository
@@ -90,6 +103,26 @@ class Backups extends ActiveRecord
         }
 
         throw new ErrorException('Backup archive is not created!');
+    }
+
+    /**
+     * Remove backup
+     *
+     * @return bool
+     */
+    public function deleteBackup()
+    {
+        $filename = $this->getBackupPath($this->repository->remote_path, $this->time);
+
+        if ($this->delete()) {
+            if (file_exists($filename)) {
+                unlink($filename);
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
 }
