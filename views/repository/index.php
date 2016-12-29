@@ -62,6 +62,14 @@ $this->title = 'Repositories';
                                         <ul role="menu" class="dropdown-menu pull-right">
                                             <li><?= Html::a('Commits', ['commits', 'id' => $repository->id]); ?><li>
                                             <li><?= Html::a('Branches', ['branches', 'id' => $repository->id]); ?><li>
+                                            <li>
+                                                <?= Html::a('Create backup', ['backup', 'id' => $repository->id], [
+                                                    'data' => [
+                                                        'method' => 'POST',
+                                                        'confirm' => 'Are you sure you want to create backup this item?',
+                                                    ],
+                                                ]); ?>
+                                            </li>
                                             <li><?= Html::a('Check new version', ['check', 'id' => $repository->id]); ?></li>
                                             <li class="divider"></li>
                                             <li><?= Html::a('Settings', ['settings', 'id' => $repository->id]); ?></li>

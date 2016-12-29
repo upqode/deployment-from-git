@@ -7,6 +7,7 @@ use app\components\BitBucket;
 use app\components\Deployment;
 use app\components\FileSystem;
 use app\components\GitHub;
+use app\models\Backups;
 use app\models\Commits;
 use app\models\forms\RepositoryForm;
 use app\models\forms\ServiceForm;
@@ -14,6 +15,7 @@ use app\models\Repositories;
 use app\models\Services;
 use app\models\Users;
 use Yii;
+use yii\base\ErrorException;
 use yii\bootstrap\ActiveForm;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
@@ -45,6 +47,7 @@ class RepositoryController extends BaseController
                     'get-local-path' => ['POST'],
                     'install-commit' => ['POST'],
                     'delete' => ['POST'],
+                    'backup' => ['POST'],
                 ],
             ],
         ];
@@ -337,6 +340,44 @@ class RepositoryController extends BaseController
             Yii::$app->response->content = $install_commit;
             return Yii::$app->response->send();
         }
+    }
+
+    /**
+     * Create backup this repository
+     *
+     * @param $id - repository id
+     * @return Response
+     */
+    public function actionBackup($id)
+    {
+        $repository = Repositories::findOne(intval($id));
+
+        $result = [
+            'type' => 'alert-danger',
+            'icon' => 'mdi mdi-close-circle-o',
+            'title' => 'Danger!',
+            'message' => 'Repository not found!',
+        ];
+
+        if ($repository) {
+            try {
+                if (Backups::createBackup($repository)) {
+                    $result = [
+                        'type' => 'alert-success',
+                        'icon' => 'mdi mdi-check',
+                        'title' => 'Success!',
+                        'message' => 'Backup created!',
+                    ];
+                } else {
+                    $result['message'] = 'Backup is not created!';
+                }
+            } catch (ErrorException $error) {
+                $result['message'] = $error->getMessage();
+            }
+        }
+
+        Yii::$app->session->setFlash('repositoryOperation', $result);
+        return $this->redirect(['index']);
     }
 
     /**
