@@ -323,7 +323,8 @@ class RepositoryController extends BaseController
 
         if (!$repository) {
             Yii::$app->response->setStatusCode(400);
-            return Json::encode(['result' => 'Repository not found!']);
+            Yii::$app->response->content = 'Repository not found!';
+            return Yii::$app->response->send();
         }
 
         $install_commit = Deployment::installCommit($repository, $commit);
@@ -333,7 +334,8 @@ class RepositoryController extends BaseController
             return Json::encode(['result' => 'Commit has been installed!']);
         } else {
             Yii::$app->response->setStatusCode(400);
-            return Json::encode(['result' => $install_commit]);
+            Yii::$app->response->content = $install_commit;
+            return Yii::$app->response->send();
         }
     }
 

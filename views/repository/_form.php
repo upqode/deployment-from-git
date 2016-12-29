@@ -10,7 +10,7 @@ use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
 
-$this->registerJsFile('/js/add-repository.js', ['depends' => ['yii\web\JqueryAsset']]);
+$this->registerJsFile('/js/repository.js', ['depends' => ['yii\web\JqueryAsset']]);
 ?>
 
 <?php $form = ActiveForm::begin([

@@ -106,9 +106,9 @@ class Repositories extends ActiveRecord
     {
         $commits = array();
 
-        if ($this->service_id === ServiceForm::TYPE_GITHUB) {
+        if ($this->service_id == ServiceForm::TYPE_GITHUB) {
             $commits = GitHub::getCommits($this);
-        } elseif ($this->service_id === ServiceForm::TYPE_BITBUCKET) {
+        } elseif ($this->service_id == ServiceForm::TYPE_BITBUCKET) {
             $commits = BitBucket::getCommits($this);
         }
 
@@ -125,9 +125,9 @@ class Repositories extends ActiveRecord
     {
         $branches = array();
 
-        if ($this->service_id === ServiceForm::TYPE_GITHUB) {
+        if ($this->service_id == ServiceForm::TYPE_GITHUB) {
             $branches = GitHub::getBranches($this, $branch);
-        } elseif ($this->service_id === ServiceForm::TYPE_BITBUCKET) {
+        } elseif ($this->service_id == ServiceForm::TYPE_BITBUCKET) {
             $branches = BitBucket::getBranches($this, $branch);
         }
 
@@ -143,9 +143,9 @@ class Repositories extends ActiveRecord
      */
     public function saveRemoteArchive($commit)
     {
-        if ($this->service_id === ServiceForm::TYPE_GITHUB) {
+        if ($this->service_id == ServiceForm::TYPE_GITHUB) {
             return GitHub::saveArchive($this, $commit);
-        } elseif ($this->service_id === ServiceForm::TYPE_BITBUCKET) {
+        } elseif ($this->service_id == ServiceForm::TYPE_BITBUCKET) {
             return BitBucket::saveArchive($this, $commit);
         }
 
@@ -163,9 +163,9 @@ class Repositories extends ActiveRecord
         $local_old_commit = Commits::find()->select('sha')->where(['repository_id' => $this->id])->one();
         $branch_info = $this->getRepositoryBranches('master');
 
-        if ($this->service_id === ServiceForm::TYPE_GITHUB) {
+        if ($this->service_id == ServiceForm::TYPE_GITHUB) {
             $remote_old_commit = ArrayHelper::getValue($branch_info, 'commit.sha');
-        } elseif ($this->service_id === ServiceForm::TYPE_BITBUCKET) {
+        } elseif ($this->service_id == ServiceForm::TYPE_BITBUCKET) {
             $remote_old_commit = ArrayHelper::getValue($branch_info, 'target.hash');
         }
 

@@ -61,7 +61,7 @@ class FileSystem
      *
      * @param string $name
      * @param string $source
-     * @return bool
+     * @return bool|int
      */
     public static function createZipArchive($name, $source)
     {
@@ -100,7 +100,10 @@ class FileSystem
             $zip->addFromString(basename($source), file_get_contents($source));
         }
 
-        return $zip->close();
+        $num_files = $zip->numFiles;
+        $zip->close();
+
+        return $num_files;
     }
 
     /**

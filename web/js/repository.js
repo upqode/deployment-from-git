@@ -90,8 +90,8 @@
                         success: function(response) {
                             swal({title: response['result'], type: 'success'});
                         },
-                        error: function(response) {
-                            swal({title: response['result'], type: 'error'});
+                        error: function(error) {
+                            swal({title: error.responseText, type: 'error'});
                         }
                     });
                 });

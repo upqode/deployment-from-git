@@ -93,16 +93,18 @@ class Backups extends ActiveRecord
         $create_zip = FileSystem::createZipArchive($filename, $repository->local_path);
 
         // check create archive
-        if ($create_zip) {
+        if ($create_zip === 0) { // if local_path is empty
+            return false;
+        } elseif ($create_zip > 0) {
             $backup = new Backups([ // register backup log
                 'repository_id' => $repository->id,
                 'time' => $time,
             ]);
 
             return $backup->save();
+        } else {
+            throw new ErrorException('Backup archive is not created!');
         }
-
-        throw new ErrorException('Backup archive is not created!');
     }
 
     /**

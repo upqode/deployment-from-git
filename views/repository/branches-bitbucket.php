@@ -10,7 +10,7 @@ use yii\helpers\Html;
 $this->title = 'Repository Branches';
 $this->registerCssFile('/library/sweetalert/sweetalert.css');
 $this->registerJsFile('/library/sweetalert/sweetalert.min.js', ['depends' => ['yii\web\JqueryAsset']]);
-$this->registerJsFile('/js/add-repository.js', ['depends' => ['yii\web\JqueryAsset']]);
+$this->registerJsFile('/js/repository.js', ['depends' => ['yii\web\JqueryAsset']]);
 ?>
 <div class="row">
     <div class="col-md-12">
