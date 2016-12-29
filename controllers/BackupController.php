@@ -109,7 +109,22 @@ class BackupController extends BaseController
         return $this->redirect(['index']);
     }
 
-    public function actionInstall() {}
+    /**
+     * Install selected backup
+     *
+     * @return string
+     */
+    public function actionInstall()
+    {
+        $id = Yii::$app->request->post('id');
+        $backup = Backups::findOne(intval($id));
+
+        if ($backup && $backup->installBackup()) {
+            return Json::encode(['message' => 'Backup successful restored!', 'type' => 'success']);
+        }
+
+        return Json::encode(['message' => 'Backup is not restored!', 'type' => 'error']);
+    }
 
     /**
      * Remove backup

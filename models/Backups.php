@@ -107,6 +107,32 @@ class Backups extends ActiveRecord
         }
     }
 
+    public function installBackup()
+    {
+        $file = $this->getBackupPath($this->repository->remote_path, $this->time);
+
+        if (file_exists($file)) {
+            $tmp_dir = str_replace('archives', 'tmp', $file);
+            $tmp_dir = str_replace('.zip', '', $tmp_dir);
+
+            // extract backup archive in tmp dir
+            FileSystem::extractArchive($file, $tmp_dir);
+
+            // clear previous version
+            FileSystem::removeDir($this->repository->local_path, false);
+
+            // copy new files
+            FileSystem::copyFiles($tmp_dir, $this->repository->local_path);
+
+            // remove tmp files
+            FileSystem::removeDir($tmp_dir);
+
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Remove backup
      *

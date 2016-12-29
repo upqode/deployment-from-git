@@ -86,7 +86,7 @@ class FileSystem
                 if (in_array(substr($file, strrpos($file, '/') + 1), array('.', '..')))
                     continue;
 
-                $file = realpath($file);
+                $file = str_replace('\\', '/', realpath($file));
 
                 if (is_dir($file)) {
                     $zip->addEmptyDir(str_replace("{$source}/", '', "{$file}/"));
@@ -145,15 +145,21 @@ class FileSystem
      * Archive extract
      *
      * @param string $archive
+     * @param string $extract_to
      * @return bool
      * @throws ErrorException
      */
-    public static function extractArchive($archive)
+    public static function extractArchive($archive, $extract_to = '')
     {
         @set_time_limit(100);
         $zip = new \ZipArchive();
-        $filename = substr($archive, strrpos($archive, '/'));
-        $folder_name = str_replace($filename, '', $archive);
+
+        if ($extract_to) {
+            $folder_name = $extract_to;
+        } else {
+            $filename = substr($archive, strrpos($archive, '/'));
+            $folder_name = str_replace($filename, '', $archive);
+        }
 
         if ($zip->open($archive) === true) {
             $zip->extractTo($folder_name);
