@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\components\BaseController;
 use app\models\Backups;
+use app\models\Repositories;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -29,7 +30,8 @@ class BackupController extends BaseController
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'install' => ['POST'],
+                    'restore-last' => ['POST'],
+                    'restore' => ['POST'],
                     'delete' => ['POST'],
                 ],
             ],
@@ -110,17 +112,39 @@ class BackupController extends BaseController
     }
 
     /**
-     * Install selected backup
+     * Restore selected backup
      *
      * @return string
      */
-    public function actionInstall()
+    public function actionRestore()
     {
         $id = Yii::$app->request->post('id');
         $backup = Backups::findOne(intval($id));
 
         if ($backup && $backup->installBackup()) {
             return Json::encode(['message' => 'Backup successful restored!', 'type' => 'success']);
+        }
+
+        return Json::encode(['message' => 'Backup is not restored!', 'type' => 'error']);
+    }
+
+    /**
+     * Restore last repository backup
+     *
+     * @return string
+     */
+    public function actionRestoreLast()
+    {
+        $id = Yii::$app->request->post('id');
+        $repository = Repositories::findOne(intval($id));
+
+        if ($repository) {
+            $backup_id = Backups::find()->where(['repository_id' => $repository->id])->max('id');
+            $backup = Backups::findOne($backup_id);
+
+            if ($backup && $backup->installBackup()) {
+                return Json::encode(['message' => 'Backup successful restored!', 'type' => 'success']);
+            }
         }
 
         return Json::encode(['message' => 'Backup is not restored!', 'type' => 'error']);

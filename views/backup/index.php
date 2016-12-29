@@ -6,6 +6,9 @@
 use yii\helpers\Html;
 
 $this->title = 'Backups List';
+$this->registerCssFile('/library/sweetalert/sweetalert.css');
+$this->registerJsFile('/library/sweetalert/sweetalert.min.js', ['depends' => ['yii\web\JqueryAsset']]);
+$this->registerJsFile('/js/backups.js', ['depends' => ['yii\web\JqueryAsset']]);
 ?>
 <div class="row">
     <div class="col-md-12">
@@ -54,7 +57,12 @@ $this->title = 'Backups List';
                                             </button>
                                             <ul role="menu" class="dropdown-menu pull-right">
                                                 <li><?= Html::a('Backups list', ['repository', 'id' => $backup['repository_id']]) ?></li>
-                                                <li><?= Html::a('Install last backup', ['install-last', 'id' => $backup['repository_id']]) ?></li>
+                                                <li>
+                                                    <?= Html::a('Restore last backup', '#', [
+                                                        'class' => 'ajax-backup-restore-last',
+                                                        'data-id' => $backup['repository_id'],
+                                                    ]) ?>
+                                                </li>
                                             </ul>
                                         </div>
                                     </td>

@@ -2,8 +2,35 @@
     "use strict";
 
     $(document).ready(function() {
-        var installBackup = function() {
-            $('.ajax-backup-install').click(function(e) {
+        var restoreLastBackup = function() {
+            $('.ajax-backup-restore-last').click(function(e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+
+                swal({
+                        title: 'Вы уверены?',
+                        text: 'Выполнение данного действия произведет к удалению текущей версии сайта и восстановит последнюю версию бекапа!',
+                        type: 'warning',
+                        closeOnConfirm: false,
+                        showCancelButton: true,
+                        showLoaderOnConfirm: true
+                    },
+                    function() {
+                        $.ajax({
+                            url: '/backup/restore-last',
+                            method: 'POST',
+                            data: {id: id},
+                            dataType: 'json',
+                            success: function(response) {
+                                swal({title: response['message'], type: response['type']});
+                            }
+                        });
+                    });
+            });
+        };
+
+        var restoreBackup = function() {
+            $('.ajax-backup-restore').click(function(e) {
                 e.preventDefault();
                 var id = $(this).data('id');
 
@@ -17,7 +44,7 @@
                     },
                     function() {
                         $.ajax({
-                            url: '/backup/install',
+                            url: '/backup/restore',
                             method: 'POST',
                             data: {id: id},
                             dataType: 'json',
@@ -61,7 +88,8 @@
         };
 
 
-        installBackup();
+        restoreLastBackup();
+        restoreBackup();
         deleteBackup();
     });
 

@@ -1,8 +1,8 @@
 <?php
 
-/* @var $this yii\web\View */
 use yii\helpers\Url;
 
+/* @var $this yii\web\View */
 /* @var $backup \app\models\Backups */
 /* @var $backups array */
 
@@ -31,7 +31,7 @@ $this->registerJsFile('/js/backups.js', ['depends' => ['yii\web\JqueryAsset']]);
                             <tr class="ajax-row" data-id="<?= $backup->id ?>">
                                 <td><?= Yii::$app->formatter->asDatetime($backup->time); ?></td>
                                 <td class="actions">
-                                    <a href="#" class="icon xs-mr-10 ajax-backup-install" data-id="<?= $backup->id ?>"><i class="mdi mdi-upload"></i></a>
+                                    <a href="#" class="icon xs-mr-10 ajax-backup-restore" data-id="<?= $backup->id ?>"><i class="mdi mdi-upload"></i></a>
                                     <a href="<?= Url::toRoute(['download', 'id' => $backup->id]); ?>" class="icon xs-mr-10"><i class="mdi mdi-download"></i></a>
                                     <a href="#" class="icon ajax-backup-delete" data-id="<?= $backup->id ?>"><i class="mdi mdi-delete"></i></a>
                                 </td>
