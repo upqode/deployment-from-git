@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\components\BaseController;
 use app\models\forms\ServiceForm;
+use app\models\Logs;
 use app\models\Services;
 use Yii;
 use yii\data\Pagination;
@@ -149,6 +150,8 @@ class ServicesController extends BaseController
             $service->attributes = $model->attributes;
             $service->update();
 
+            Logs::setLog(102, [':service_name' => $service->username, ':service_type' => $service->getServiceName()]);
+
             Yii::$app->session->setFlash('serviceOperation', [
                 'type' => 'alert-success',
                 'icon' => 'mdi mdi-check',
@@ -175,6 +178,8 @@ class ServicesController extends BaseController
         $service = Services::findOne(intval($id));
 
         if ($service && $user->is_admin && $service->delete()) {
+            Logs::setLog(105, [':service_name' => $service->username, ':service_type' => $service->getServiceName()]);
+
             Yii::$app->session->setFlash('serviceOperation', [
                 'type' => 'alert-success',
                 'icon' => 'mdi mdi-check',

@@ -106,13 +106,13 @@ class Users extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Get user or default name
+     * Get user or email
      *
      * @return string
      */
     public function getName()
     {
-        return $this->name ?: 'No Name';
+        return $this->name ?: $this->email;
     }
 
     /**

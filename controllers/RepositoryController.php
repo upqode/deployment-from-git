@@ -11,6 +11,7 @@ use app\models\Backups;
 use app\models\Commits;
 use app\models\forms\RepositoryForm;
 use app\models\forms\ServiceForm;
+use app\models\Logs;
 use app\models\Repositories;
 use app\models\Services;
 use app\models\Users;
@@ -106,6 +107,8 @@ class RepositoryController extends BaseController
                 'title' => 'Success!',
                 'message' => 'Repository has been added in system!',
             ]);
+
+            Logs::setLog(301, [':repository' => $model->remote_path]);
 
             return $this->redirect(['index']);
         }
@@ -210,6 +213,8 @@ class RepositoryController extends BaseController
                 'message' => 'Repository updated!',
             ]);
 
+            Logs::setLog(302, [':repository' => $model->remote_path]);
+
             return $this->redirect(['index']);
         }
 
@@ -240,6 +245,8 @@ class RepositoryController extends BaseController
                 'title' => 'Success!',
                 'message' => 'Repository removed!',
             ]);
+
+            Logs::setLog(303, [':repository' => $repository->remote_path]);
         } else {
             Yii::$app->session->setFlash('repositoryOperation', [
                 'type' => 'alert-danger',

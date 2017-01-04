@@ -101,6 +101,8 @@ class Backups extends ActiveRecord
                 'time' => $time,
             ]);
 
+            Logs::setLog(401, [':repository' => $repository->remote_path]);
+
             return $backup->save();
         } else {
             throw new ErrorException('Backup archive is not created!');
@@ -127,6 +129,9 @@ class Backups extends ActiveRecord
             // remove tmp files
             FileSystem::removeDir($tmp_dir);
 
+            // create log
+            Logs::setLog(402, [':repository' => $this->repository->remote_path]);
+
             return true;
         }
 
@@ -146,6 +151,8 @@ class Backups extends ActiveRecord
             if (file_exists($filename)) {
                 unlink($filename);
             }
+
+            Logs::setLog(403, [':repository' => $this->repository->remote_path]);
 
             return true;
         }

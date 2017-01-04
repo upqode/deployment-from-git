@@ -103,6 +103,9 @@ class Services extends ActiveRecord
             $service->is_active = $is_active;
             $service->update();
 
+            $msg_id = $is_active ? 103 : 104;
+            Logs::setLog($msg_id, [':service_name' => $service->username, ':service_type' => $service->getServiceName()]);
+
             Yii::$app->session->setFlash('serviceOperation', [
                 'type' => 'alert-success',
                 'icon' => 'mdi mdi-check',

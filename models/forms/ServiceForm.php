@@ -2,6 +2,7 @@
 
 namespace app\models\forms;
 
+use app\models\Logs;
 use app\models\Services;
 use Yii;
 use yii\base\Model;
@@ -48,6 +49,8 @@ class ServiceForm extends Model
             'created_date' => Yii::$app->formatter->asTimestamp('now'),
             'is_active' => $this->is_active,
         ]);
+
+        Logs::setLog(101, [':service_name' => $service->username, ':service_type' => $service->getServiceName()]);
 
         return $service->save();
     }

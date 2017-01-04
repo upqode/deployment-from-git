@@ -63,11 +63,17 @@ class Logs extends ActiveRecord
             104 => 'User <b>:user</b> deactivated <b>:service_name (:service_type)</b> service!',
             105 => 'User <b>:user</b> deleted <b>:service_name (:service_type)</b> service!',
             // users
-
+            201 => 'User <b>:user</b> created <b>:profile</b> profile!',
+            202 => 'User <b>:user</b> modify <b>:profile</b> profile permissions!',
+            203 => 'User <b>:user</b> deleted <b>:profile</b> profile!',
             // repositories
-
+            301 => 'User <b>:user</b> register <b>:repository</b> repository in system!',
+            302 => 'User <b>:user</b> modify <b>:repository</b> repository setting!',
+            303 => 'User <b>:user</b> deleted <b>:repository</b> repository from system!',
             // backups
-
+            401 => 'User <b>:user</b> created <b>:repository</b> repository backup!',
+            402 => 'User <b>:user</b> restored backup in repository <b>:repository</b>!',
+            403 => 'User <b>:user</b> deleted backup from repository <b>:repository</b>!',
         ];
 
         if (isset($message[$msd_id])) {

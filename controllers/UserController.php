@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\components\BaseController;
 use app\models\forms\UserForm;
+use app\models\Logs;
 use app\models\Users;
 use Yii;
 use yii\data\Pagination;
@@ -83,8 +84,10 @@ class UserController extends BaseController
                 'type' => 'alert-success',
                 'icon' => 'mdi mdi-check',
                 'title' => 'Success!',
-                'message' => 'Пользователь успешно удален!',
+                'message' => 'Пользователь успешно создан!',
             ]);
+
+            Logs::setLog(201, [':profile' => $model->email]);
 
             return $this->redirect(['index']);
         }
@@ -133,6 +136,8 @@ class UserController extends BaseController
                 'message' => 'Информация о пользователи обновлена!',
             ]);
 
+            Logs::setLog(202, [':profile' => $user->getName()]);
+
             return $this->redirect(['index']);
         }
 
@@ -168,6 +173,8 @@ class UserController extends BaseController
                 'title' => 'Success!',
                 'message' => 'Пользователь успешно удален!',
             ]);
+
+            Logs::setLog(203, [':profile' => $user->getName()]);
         } else {
             Yii::$app->session->setFlash('userOperation', [
                 'type' => 'alert-danger',
@@ -217,7 +224,6 @@ class UserController extends BaseController
         // change password
         if (Yii::$app->request->post('type') === $model_password::SCENARIO_USER_PASS) {
             if ($model_password->load(Yii::$app->request->post()) && $model_password->validate()) {
-                print_r($model_password);
                 if ($user->validatePassword($model_password->old_password)) {
                     $user->password = Yii::$app->security->generatePasswordHash($model_password->password);
                     $user->update();
