@@ -55,7 +55,7 @@ class Logs extends ActiveRecord
      */
     public static function getMessageText($msd_id, $msg_params = [])
     {
-        $message = [
+        $messages = [
             // services
             101 => 'User <b>:user</b> created <b>:service_name (:service_type)</b> service!',
             102 => 'User <b>:user</b> modify <b>:service_name (:service_type)</b> service setting!',
@@ -76,8 +76,8 @@ class Logs extends ActiveRecord
             403 => 'User <b>:user</b> deleted backup from repository <b>:repository</b>!',
         ];
 
-        if (isset($message[$msd_id])) {
-            return strtr($message[$msd_id], $msg_params);
+        if (isset($messages[$msd_id])) {
+            return strtr($messages[$msd_id], $msg_params);
         }
 
         return false;
@@ -105,6 +105,19 @@ class Logs extends ActiveRecord
         ]);
 
         return $log->save();
+    }
+
+    /**
+     * Render last logs
+     *
+     * @param int $length
+     * @return string
+     */
+    public static function getLastNotifications($length = 3)
+    {
+        $logs = Logs::find()->limit($length)->orderBy(['id' => SORT_DESC])->all();
+
+        return Yii::$app->view->render('/log/notifications', ['logs' => $logs]);
     }
 
 }
