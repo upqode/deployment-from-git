@@ -1,84 +1,51 @@
 <?php
 
 /* @var $this yii\web\View */
+/* @var $model \app\models\forms\SettingsForm */
 
+use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
-$this->title = 'Settings';
+$this->title = 'System Settings';
 ?>
 <div class="row">
-    <div class="col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading panel-heading-divider">
-                Основное
-                <span class="panel-subtitle">Default bootstrap modal component</span>
+    <div class="col-sm-12">
+        <?php if (Yii::$app->session->hasFlash('settingsHasBeenUpdated')): ?>
+            <div role="alert" class="alert alert-contrast alert-success alert-dismissible">
+                <div class="icon"><span class="mdi mdi-check"></span></div>
+                <div class="message">
+                    <button type="button" data-dismiss="alert" aria-label="Close" class="close">
+                        <span aria-hidden="true" class="mdi mdi-close"></span>
+                    </button>
+                    <strong>Success!</strong> Settings has been updated.
+                </div>
             </div>
-            <div class="panel-body">
-                <form>
-                    <div class="form-group xs-pt-10">
-                        <label>Email address</label>
-                        <input type="email" placeholder="Enter email" class="form-control input-sm">
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" placeholder="Password" class="form-control input-sm">
-                    </div>
-                    <div class="row xs-pt-15">
-                        <div class="col-xs-offset-6 col-xs-6">
-                            <p class="text-right">
-                                <button type="submit" class="btn btn-space btn-primary">Submit</button>
-                                <button class="btn btn-space btn-default">Cancel</button>
-                            </p>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading panel-heading-divider">
-                Резервное копирование
-                <span class="panel-subtitle">Default bootstrap modal with a footer content</span>
-            </div>
-            <div class="panel-body">
-                <p>Modals are streamlined, but flexible, dialog prompts with the minimum required functionality and smart defaults.</p>
-            </div>
-        </div>
-    </div>
-</div>
+        <?php endif; ?>
 
-<div class="row">
-    <div class="col-sm-4">
         <div class="panel panel-default">
             <div class="panel-heading panel-heading-divider">
-                Логирование
+                <?= Html::decode($this->title); ?>
                 <span class="panel-subtitle">Default bootstrap modal component</span>
             </div>
             <div class="panel-body">
-                <p>Modals are streamlined, but flexible, dialog prompts with the minimum required functionality and smart defaults.</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-4">
-        <div class="panel panel-default">
-            <div class="panel-heading panel-heading-divider">
-                Уведомления
-                <span class="panel-subtitle">Default bootstrap modal with a footer content</span>
-            </div>
-            <div class="panel-body">
-                <p>Modals are streamlined, but flexible, dialog prompts with the minimum required functionality and smart defaults.</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-4">
-        <div class="panel panel-default">
-            <div class="panel-heading panel-heading-divider">
-                Планировщик заданий
-                <span class="panel-subtitle">Default bootstrap modal with a footer content</span>
-            </div>
-            <div class="panel-body">
-                <p>Modals are streamlined, but flexible, dialog prompts with the minimum required functionality and smart defaults.</p>
+                <?php $form = ActiveForm::begin(); ?>
+
+                <p class="lead">General</p>
+                <?= $form->field($model, 'admin_email')->textInput(); ?>
+
+                <p class="lead">Backups</p>
+                <?= $form->field($model, 'backups_dir')->textInput(); ?>
+                <?= $form->field($model, 'backups_max_count_copy')->textInput(); ?>
+
+                <p class="lead">Others</p>
+                <?= $form->field($model, 'show_elements_on_page')->textInput(); ?>
+                <?= $form->field($model, 'remove_logs_after_days')->textInput(); ?>
+
+                <div class="form-group">
+                    <?= Html::submitButton('Save', ['class' => 'btn btn-space btn-primary']) ?>
+                </div>
+
+                <?php ActiveForm::end(); ?>
             </div>
         </div>
     </div>

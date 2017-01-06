@@ -2,7 +2,6 @@
 
 namespace app\models;
 
-use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 
@@ -15,11 +14,11 @@ use yii\helpers\ArrayHelper;
  */
 class Settings extends ActiveRecord
 {
-    const SETTING_ADMIN_EMAIL = 'adminEmail';
-    const SETTING_BACKUPS_DIR = 'backupsDir';
-    const SETTING_SHOW_ELEMENTS_ON_PAGE = 'showElementsOnPage';
-    const SETTING_REMOVE_LOGS_AFTER_DAYS = 'removeLogsAfterDays';
-    const SETTING_BACKUPS_MAX_COUNT_COPY = 'backupsMaxCountCopy';
+    const SETTING_ADMIN_EMAIL = 'admin_email';
+    const SETTING_BACKUPS_DIR = 'backups_dir';
+    const SETTING_SHOW_ELEMENTS_ON_PAGE = 'show_elements_on_page';
+    const SETTING_REMOVE_LOGS_AFTER_DAYS = 'remove_logs_after_days';
+    const SETTING_BACKUPS_MAX_COUNT_COPY = 'backups_max_count_copy';
 
     /**
      * @inheritdoc
@@ -61,10 +60,9 @@ class Settings extends ActiveRecord
      */
     public static function getSettingValue($name, $default = null)
     {
-        $value_from_db = Settings::find()->select('value')->where(['name' => $name])->asArray()->limit(1)->one();
-        $value = ArrayHelper::getValue($value_from_db, 'value') ?: ArrayHelper::getValue(Yii::$app->params, $name);
+        $value = Settings::find()->select('value')->where(['name' => $name])->asArray()->limit(1)->one();
 
-        return $value ?: $default;
+        return ArrayHelper::getValue($value, 'value') ?: $default;
     }
 
 }
