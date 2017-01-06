@@ -248,4 +248,17 @@ class UserController extends BaseController
         ]);
     }
 
+    /**
+     * Latest user activity
+     *
+     * @param int $id
+     * @return string
+     */
+    public function actionActivity($id)
+    {
+        $logs = Logs::find()->where(['user_id' => intval($id)])->limit(50)->orderBy(['id' => SORT_DESC])->all();
+
+        return $this->render('activity', ['logs' => $logs]);
+    }
+
 }
