@@ -2,6 +2,7 @@
 
 namespace app\components;
 
+use app\models\Settings;
 use Yii;
 use yii\base\ErrorException;
 use yii\helpers\ArrayHelper;
@@ -52,7 +53,7 @@ class FileSystem
      */
     public static function getRepositoryDir($repository, $dir = 'archives')
     {
-        $backup_dir = Yii::getAlias(Yii::$app->params['backupsDir']);
+        $backup_dir = Yii::getAlias(Settings::getSettingValue(Settings::SETTING_BACKUPS_DIR));
         return "{$backup_dir}/{$repository}/{$dir}";
     }
 

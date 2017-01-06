@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\components\BaseController;
 use app\models\forms\UserForm;
 use app\models\Logs;
+use app\models\Settings;
 use app\models\Users;
 use Yii;
 use yii\data\Pagination;
@@ -44,9 +45,11 @@ class UserController extends BaseController
      */
     public function actionIndex()
     {
+        $pageSize = Settings::getSettingValue(Settings::SETTING_SHOW_ELEMENTS_ON_PAGE, 25);
+
         $query = Users::find();
         $countQuery = clone $query;
-        $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => 25]);
+        $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => $pageSize]);
         $users = $query->offset($pages->offset)->limit($pages->limit)->all();
 
         return $this->render('index', [

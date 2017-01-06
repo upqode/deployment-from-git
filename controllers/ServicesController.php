@@ -6,6 +6,7 @@ use app\components\BaseController;
 use app\models\forms\ServiceForm;
 use app\models\Logs;
 use app\models\Services;
+use app\models\Settings;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
@@ -45,9 +46,11 @@ class ServicesController extends BaseController
      */
     public function actionIndex()
     {
+        $pageSize = Settings::getSettingValue(Settings::SETTING_SHOW_ELEMENTS_ON_PAGE, 15);
+
         $query = Services::find();
         $countQuery = clone $query;
-        $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => 15]);
+        $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => $pageSize]);
         $services = $query->offset($pages->offset)->limit($pages->limit)->all();
 
         return $this->render('index', [

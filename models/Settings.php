@@ -18,6 +18,7 @@ class Settings extends ActiveRecord
     const SETTING_ADMIN_EMAIL = 'adminEmail';
     const SETTING_BACKUPS_DIR = 'backupsDir';
     const SETTING_SHOW_ELEMENTS_ON_PAGE = 'showElementsOnPage';
+    const SETTING_REMOVE_LOGS_AFTER_DAYS = 'removeLogsAfterDays';
     const SETTING_BACKUPS_MAX_COUNT_COPY = 'backupsMaxCountCopy';
 
     /**
@@ -60,7 +61,7 @@ class Settings extends ActiveRecord
      */
     public static function getSettingValue($name, $default = null)
     {
-        $value_from_db = Settings::find()->select('value')->where(['name' => $name])->asArray()->one();
+        $value_from_db = Settings::find()->select('value')->where(['name' => $name])->asArray()->limit(1)->one();
         $value = ArrayHelper::getValue($value_from_db, 'value') ?: ArrayHelper::getValue(Yii::$app->params, $name);
 
         return $value ?: $default;

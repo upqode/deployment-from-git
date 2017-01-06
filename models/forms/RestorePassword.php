@@ -2,6 +2,7 @@
 
 namespace app\models\forms;
 
+use app\models\Settings;
 use app\models\Users;
 use Yii;
 use yii\base\Model;
@@ -54,13 +55,15 @@ class RestorePassword extends Model
             return false;
         }
 
+        $admin_email = Settings::getSettingValue(Settings::SETTING_ADMIN_EMAIL);
         $key = Yii::$app->security->generateRandomString(15);
+
         $user->reset_key = $key;
         $user->save();
 
         Yii::$app->mailer->compose()
             ->setTo($this->email)
-            ->setFrom([Yii::$app->params['adminEmail'] => Yii::$app->name])
+            ->setFrom([$admin_email => Yii::$app->name])
             ->setSubject('Reset password')
             ->setHtmlBody('Please open <a href="'. Url::toRoute(['/site/reset-password', 'email' => urlencode($this->email), 'key' => $key], true) .'">this link</a>')
             ->send();

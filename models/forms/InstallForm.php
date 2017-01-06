@@ -3,6 +3,7 @@
 namespace app\models\forms;
 
 use app\models\Users;
+use Yii;
 use yii\base\Model;
 
 class InstallForm extends Model
@@ -32,8 +33,8 @@ class InstallForm extends Model
         // create admin
         $user = new Users([
             'email' => $this->email,
-            'password' => \Yii::$app->security->generatePasswordHash($this->password),
-            'auth_key' => \Yii::$app->security->generateRandomString(15),
+            'password' => Yii::$app->security->generatePasswordHash($this->password),
+            'auth_key' => Yii::$app->security->generateRandomString(15),
             'is_admin' => true,
             'has_create' => true,
             'has_delete' => true,

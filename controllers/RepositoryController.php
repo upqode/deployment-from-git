@@ -14,6 +14,7 @@ use app\models\forms\ServiceForm;
 use app\models\Logs;
 use app\models\Repositories;
 use app\models\Services;
+use app\models\Settings;
 use app\models\Users;
 use Yii;
 use yii\base\ErrorException;
@@ -61,9 +62,11 @@ class RepositoryController extends BaseController
      */
     public function actionIndex()
     {
+        $pageSize = Settings::getSettingValue(Settings::SETTING_SHOW_ELEMENTS_ON_PAGE, 25);
+
         $query = Repositories::find();
         $countQuery = clone $query;
-        $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => 25]);
+        $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => $pageSize]);
         $repositories = $query->offset($pages->offset)->limit($pages->limit)->all();
 
         return $this->render('index', [
