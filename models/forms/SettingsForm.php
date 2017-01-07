@@ -19,7 +19,8 @@ class SettingsForm extends Model
     public function rules()
     {
         return [
-            [['admin_email', 'backups_dir', 'show_elements_on_page'], 'string', 'max' => 255],
+            [['admin_email'], 'email'],
+            [['backups_dir', 'show_elements_on_page'], 'string', 'max' => 255],
             [['remove_logs_after_days', 'backups_max_count_copy'], 'string', 'max' => 255],
         ];
     }

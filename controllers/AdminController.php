@@ -3,8 +3,12 @@
 namespace app\controllers;
 
 use app\components\BaseController;
+use app\models\Backups;
 use app\models\forms\SettingsForm;
+use app\models\Logs;
+use app\models\Repositories;
 use app\models\Settings;
+use app\models\Users;
 use Yii;
 use yii\filters\AccessControl;
 
@@ -28,9 +32,24 @@ class AdminController extends BaseController
         ];
     }
 
+    /**
+     * Dashboard
+     *
+     * @return string
+     */
     public function actionIndex()
     {
-        return $this->render('index');
+        $logs = Logs::find()->limit(10)->orderBy(['id' => SORT_DESC])->all();
+        $counters = [
+            'users' => Users::find()->count(),
+            'backups' => Backups::find()->count(),
+            'repositories' => Repositories::find()->count(),
+        ];
+
+        return $this->render('index', [
+            'logs' => $logs,
+            'counters' => $counters,
+        ]);
     }
 
     /**
@@ -38,7 +57,7 @@ class AdminController extends BaseController
      *
      * @return string|\yii\web\Response
      */
-    public function actionSetting()
+    public function actionSettings()
     {
         $model = new SettingsForm();
 

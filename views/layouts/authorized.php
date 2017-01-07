@@ -92,7 +92,7 @@ AppAsset::register($this);
                                 ['label' => 'Statistics', 'icon' => 'icon mdi mdi-chart', 'url' => ['/admin/index']],
                                 ['label' => 'Repositories', 'icon' => 'icon mdi mdi-storage', 'url' => ['/repository/index']],
                                 ['label' => 'Backups', 'icon' => 'icon mdi mdi-archive', 'url' => ['/backup/index']],
-                                ['label' => 'Settings', 'icon' => 'icon mdi mdi-settings', 'url' => ['/admin/setting']],
+                                ['label' => 'Settings', 'icon' => 'icon mdi mdi-settings', 'url' => ['/admin/settings']],
                                 ['label' => 'Users', 'icon' => 'icon mdi mdi-accounts-list-alt', 'url' => ['/user/index']],
                                 ['label' => 'Cron', 'icon' => 'icon mdi mdi-time-interval', 'url' => ['/admin/cron']],
                                 ['label' => 'Logs', 'icon' => 'icon mdi mdi-file', 'url' => ['/log/index']],
