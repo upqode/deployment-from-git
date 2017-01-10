@@ -20,7 +20,7 @@
             $('#select-current-dir').click(function() {
                 var local_path = $('#local-path').val();
 
-                $('#repositoryform-local_path').val(local_path);
+                $('#local-path-visible-field').val(local_path);
                 $('#select-local-path-modal').modal('hide');
             });
 

@@ -73,6 +73,7 @@ $this->title = 'Repositories';
                                             <li><?= Html::a('Check new version', ['check', 'id' => $repository->id]); ?></li>
                                             <li class="divider"></li>
                                             <li><?= Html::a('Settings', ['settings', 'id' => $repository->id]); ?></li>
+                                            <li><?= Html::a('Excluded folders', ['excluded-folders', 'id' => $repository->id]); ?></li>
                                             <li>
                                                 <?= Html::a('Delete', ['delete', 'id' => $repository->id], [
                                                     'data' => [

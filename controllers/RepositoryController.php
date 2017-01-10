@@ -9,6 +9,8 @@ use app\components\FileSystem;
 use app\components\GitHub;
 use app\models\Backups;
 use app\models\Commits;
+use app\models\ExcludeFolders;
+use app\models\forms\ExcludeFoldersForm;
 use app\models\forms\RepositoryForm;
 use app\models\forms\ServiceForm;
 use app\models\Logs;
@@ -337,7 +339,7 @@ class RepositoryController extends BaseController
         if (!$repository) {
             Yii::$app->response->setStatusCode(400);
             Yii::$app->response->content = 'Repository not found!';
-            return Yii::$app->response->send();
+            Yii::$app->response->send(); die;
         }
 
         $install_commit = Deployment::installCommit($repository, $commit);
@@ -348,7 +350,7 @@ class RepositoryController extends BaseController
         } else {
             Yii::$app->response->setStatusCode(400);
             Yii::$app->response->content = $install_commit;
-            return Yii::$app->response->send();
+            Yii::$app->response->send(); die;
         }
     }
 
@@ -426,6 +428,60 @@ class RepositoryController extends BaseController
         }
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * Exclude folder
+     *
+     * @param int $id
+     * @return string|Response
+     */
+    public function actionExcludeFolders($id)
+    {
+        /** @var Users $user */
+        $user = Yii::$app->user->identity;
+        $repository = Repositories::findOne(intval($id));
+
+        if (!$repository || (!$user->is_admin && $user->id != $repository->user_id)) {
+            Yii::$app->session->setFlash('repositoryOperation', [
+                'type' => 'alert-danger',
+                'icon' => 'mdi mdi-close-circle-o',
+                'title' => 'Danger!',
+                'message' => 'Bad request!',
+            ]);
+
+            return $this->redirect(['index']);
+        }
+
+        $folder_list = FileSystem::getDirInfo($repository->local_path);
+
+        $model = new ExcludeFoldersForm();
+        $model->local_path = $repository->local_path;
+        $model->repository_id = $repository->id;
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('folderHasBeenExcluded');
+
+            return $this->redirect(['excluded-folders', 'id' => $id]);
+        }
+
+        return $this->render('exclude-folders', [
+            'folder_list' => $folder_list,
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Excluded folder list
+     *
+     * @param int $id
+     * @return string
+     */
+    public function actionExcludedFolders($id)
+    {
+        $excluded_folders = ExcludeFolders::findAll(['repository_id' => intval($id)]);
+
+        return $this->render('excluded-folders', ['excluded_folders' => $excluded_folders]);
     }
 
 }

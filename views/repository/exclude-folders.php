@@ -1,54 +1,39 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $model \app\models\forms\RepositoryForm */
-/* @var $service_list array */
+/* @var $model \app\models\forms\ExcludeFoldersForm */
 /* @var $folder_list array */
 
-use kartik\depdrop\DepDrop;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Html;
-use yii\helpers\Url;
 
+$this->title = 'Exclude Folders';
 $this->registerJsFile('/js/repository.js', ['depends' => ['yii\web\JqueryAsset']]);
 ?>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="panel panel-default panel-border-color panel-border-color-primary">
+            <div class="panel-heading panel-heading-divider">
+                <?= Html::encode($this->title); ?>
+                <span class="panel-subtitle">This is the default bootstrap form layout</span>
+            </div>
+            <div class="panel-body">
+                <?php $form = ActiveForm::begin(); ?>
 
-<?php $form = ActiveForm::begin([
-    'enableAjaxValidation' => true,
-]); ?>
+                <?= Html::hiddenInput('local_path', $folder_list['path'], ['id' => 'local-path']); ?>
 
-<?= Html::activeHiddenInput($model, 'name'); ?>
-<?= Html::hiddenInput('local_path', $folder_list['path'], ['id' => 'local-path']); ?>
+                <?= $form->field($model, 'folder', [
+                    'template' => '{label}<div class="input-group">{input}<span class="input-group-btn"><button type="button" id="select-local-path-btn" class="btn btn-primary">Select</button></span></div>{error}',
+                ])->textInput(['id' => 'local-path-visible-field']); ?>
 
-<?php if ($model->scenario == $model::SCENARIO_CREATE): ?>
-    <?= $form->field($model, 'service_id')->dropDownList($service_list, [
-        'prompt' => 'Please, select service...',
-    ]); ?>
-
-    <?= $form->field($model, 'remote_path')->widget(DepDrop::className(), [
-        'type' => DepDrop::TYPE_SELECT2,
-        'pluginOptions' => [
-            'depends' => [Html::getInputId($model, 'service_id')],
-            'placeholder' => 'Select repository...',
-            'url' => Url::toRoute(['get-for-remote-path']),
-        ],
-    ]); ?>
-<?php endif; ?>
-
-<?= $form->field($model, 'local_path', [
-    'template' => '{label}<div class="input-group">{input}<span class="input-group-btn"><button type="button" id="select-local-path-btn" class="btn btn-primary">Select</button></span></div>{error}',
-])->textInput(['id' => 'local-path-visible-field']); ?>
-
-<?= $form->field($model, 'has_auto_update')->checkbox([
-    'template' => '<div class="be-checkbox has-success">{input} {label}</div>',
-]); ?>
-
-<div class="form-group">
-    <?= Html::submitButton('Save', ['class' => 'btn btn-space btn-primary']); ?>
+                <div class="form-group">
+                    <?= Html::submitButton('Save', ['class' => 'btn btn-space btn-primary']) ?>
+                </div>
+                <?php ActiveForm::end(); ?>
+            </div>
+        </div>
+    </div>
 </div>
-<?php ActiveForm::end(); ?>
-
-
 
 <div id="select-local-path-modal" tabindex="-1" role="dialog" class="modal fade colored-header colored-header-primary in">
     <div class="modal-dialog custom-width">
