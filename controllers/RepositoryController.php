@@ -47,6 +47,7 @@ class RepositoryController extends BaseController
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
+                    'delete-folder-from-excluded' => ['POST'],
                     'get-for-remote-path' => ['POST'],
                     'get-local-path' => ['POST'],
                     'install-commit' => ['POST'],
@@ -482,6 +483,25 @@ class RepositoryController extends BaseController
         $excluded_folders = ExcludeFolders::findAll(['repository_id' => intval($id)]);
 
         return $this->render('excluded-folders', ['excluded_folders' => $excluded_folders]);
+    }
+
+    /**
+     * Remove folder form excluded
+     *
+     * @return string
+     */
+    public function actionDeleteFolderFromExcluded()
+    {
+        /** @var Users $user */
+        $user = Yii::$app->user->identity;
+        $folder_id = Yii::$app->request->post('id');
+        $excluded_folder = ExcludeFolders::findOne(intval($folder_id));
+
+        if (($user->is_admin || $user->id == $excluded_folder->repository->user_id) && $excluded_folder && $excluded_folder->delete()) {
+            return Json::encode(['message' => 'This folder has been success removed from excluded!', 'type' => 'success']);
+        } else {
+            return Json::encode(['message' => 'This folder cannot be removed from excluded!', 'type' => 'error']);
+        }
     }
 
 }

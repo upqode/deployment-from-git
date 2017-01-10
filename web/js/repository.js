@@ -98,12 +98,47 @@
             });
         };
 
+        // remove folder from excluded
+        var removeFolderFromExcluded = function() {
+            $('.ajax-ef-delete').click(function(e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+
+                swal({
+                    title: 'Вы уверены?',
+                    text: 'Выполнение данного действия приведет к удалению этой папки из списка испключенных!',
+                    type: 'warning',
+                    customClass: 'add-repository-modal-alert',
+                    closeOnConfirm: false,
+                    showCancelButton: true,
+                    showLoaderOnConfirm: true
+                },
+                function() {
+                    $.ajax({
+                        url: '/repository/delete-folder-from-excluded',
+                        cache: false,
+                        method: 'POST',
+                        data: {id: id},
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response['type'] == 'success') {
+                                $('.ajax-ef-row-id[data-id="'+ id +'"]').fadeOut('slow');
+                            }
+
+                            swal({title: response['message'], type: response['type']});
+                        }
+                    });
+                });
+            });
+        };
+
 
 
 
         installCommit();
         selectLocalPath();
         getRepositoryName();
+        removeFolderFromExcluded();
     });
 
 })(jQuery, window, document);

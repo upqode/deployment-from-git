@@ -8,6 +8,9 @@ use yii\helpers\Url;
 /* @var $excluded_folder \app\models\ExcludeFolders */
 
 $this->title = 'Excluded folders';
+$this->registerCssFile('/library/sweetalert/sweetalert.css');
+$this->registerJsFile('/library/sweetalert/sweetalert.min.js', ['depends' => ['yii\web\JqueryAsset']]);
+$this->registerJsFile('/js/repository.js', ['depends' => ['yii\web\JqueryAsset']]);
 ?>
 <div class="row">
     <div class="col-md-12">
@@ -42,7 +45,7 @@ $this->title = 'Excluded folders';
                         </thead>
                         <tbody class="no-border-x">
                         <?php foreach ($excluded_folders as $excluded_folder): ?>
-                            <tr>
+                            <tr class="ajax-ef-row-id" data-id="<?= $excluded_folder->id ?>">
                                 <td><?= $excluded_folder->folder ?></td>
                                 <td class="actions">
                                     <a href="#" class="icon ajax-ef-delete" data-id="<?= $excluded_folder->id ?>"><i class="mdi mdi-delete"></i></a>
