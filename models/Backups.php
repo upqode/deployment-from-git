@@ -64,10 +64,33 @@ class Backups extends ActiveRecord
      * @param integer $time
      * @return string
      */
-    public function getBackupPath($repository, $time)
+    public static function getBackupPath($repository, $time)
     {
         $dir = FileSystem::getRepositoryDir($repository);
         return $dir .'/'. date('d_m_Y_H_i_s', $time) .'.zip';
+    }
+
+    /**
+     * Remove old backup that not creating more limit
+     *
+     * @param int $repository_id
+     */
+    public static function deleteOldBackupIfNeed($repository_id)
+    {
+        $count = Backups::find()->where(['repository_id' => $repository_id])->count();
+        $limit = Settings::getSettingValue(Settings::SETTING_BACKUPS_MAX_COUNT_COPY);
+
+        if ($count >= $limit) {
+            $old_backup = Backups::findOne(['repository_id' => $repository_id]);
+
+            if ($old_backup->delete()) {
+                $filename = self::getBackupPath($old_backup->repository->remote_path, $old_backup->time);
+
+                if (file_exists($filename)) {
+                    unlink($filename);
+                }
+            }
+        }
     }
 
     /**
@@ -82,7 +105,7 @@ class Backups extends ActiveRecord
         @set_time_limit(100);
         $time = Yii::$app->formatter->asTimestamp('now');
         $backup_project_dir = FileSystem::getRepositoryDir($repository->remote_path);
-        $filename = $backup_project_dir .'/'. date('d_m_Y_H_i_s', $time) .'.zip';
+        $filename = self::getBackupPath($repository->remote_path, $time);
 
         // create folder for repository backup
         if (!file_exists($backup_project_dir)) {
@@ -101,6 +124,7 @@ class Backups extends ActiveRecord
                 'time' => $time,
             ]);
 
+            Backups::deleteOldBackupIfNeed($repository->id);
             Logs::setLog(401, [':repository' => $repository->remote_path]);
 
             return $backup->save();
@@ -111,7 +135,7 @@ class Backups extends ActiveRecord
 
     public function installBackup()
     {
-        $file = $this->getBackupPath($this->repository->remote_path, $this->time);
+        $file = self::getBackupPath($this->repository->remote_path, $this->time);
 
         if (file_exists($file)) {
             $tmp_dir = str_replace('archives', 'tmp', $file);
@@ -145,7 +169,7 @@ class Backups extends ActiveRecord
      */
     public function deleteBackup()
     {
-        $filename = $this->getBackupPath($this->repository->remote_path, $this->time);
+        $filename = self::getBackupPath($this->repository->remote_path, $this->time);
 
         if ($this->delete()) {
             if (file_exists($filename)) {

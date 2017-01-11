@@ -202,7 +202,7 @@ class FileSystem
      * @param bool   $include_self
      * @param array  $excluded_folders
      */
-    public static function removeDir($dir, $include_self = true, $excluded_folders = [] )
+    public static function removeDir($dir, $include_self = true, $excluded_folders = [])
     {
         @set_time_limit(5);
         if (is_dir($dir)) {
