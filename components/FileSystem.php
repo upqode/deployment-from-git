@@ -204,7 +204,7 @@ class FileSystem
      */
     public static function removeDir($dir, $include_self = true, $excluded_folders = [] )
     {
-        @set_time_limit(100);
+        @set_time_limit(5);
         if (is_dir($dir)) {
             $files = glob("{$dir}/{,.}*", GLOB_BRACE);
 
@@ -214,7 +214,7 @@ class FileSystem
                     continue;
                 }
 
-                is_dir($file) ? self::removeDir($file) : unlink($file);
+                is_dir($file) ? self::removeDir($file, $include_self, $excluded_folders) : unlink($file);
             }
 
             if ($include_self) {
