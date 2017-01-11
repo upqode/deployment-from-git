@@ -3,6 +3,7 @@
 namespace app\components;
 
 use app\models\Backups;
+use app\models\ExcludeFolders;
 use app\models\Repositories;
 use yii\base\ErrorException;
 
@@ -28,8 +29,11 @@ class Deployment
             // extract remote archive in tmp dir
             FileSystem::extractArchive($saved_file);
 
+            // get excluded folders in repositories
+            $excluded_folders = ExcludeFolders::find()->select('folder')->where(['repository_id' => $repository->id])->column();
+
             // clear previous version
-            FileSystem::removeDir($repository->local_path, false);
+            FileSystem::removeDir($repository->local_path, false, $excluded_folders);
 
             // copy new files
             $repository_extract_folder = str_replace('.zip', '', $saved_file);

@@ -199,17 +199,18 @@ class FileSystem
      * Remove dir with all files
      *
      * @param string $dir
-     * @param bool $include_self
+     * @param bool   $include_self
+     * @param array  $excluded_folders
      */
-    public static function removeDir($dir, $include_self = true)
+    public static function removeDir($dir, $include_self = true, $excluded_folders = [] )
     {
         @set_time_limit(100);
         if (is_dir($dir)) {
             $files = glob("{$dir}/{,.}*", GLOB_BRACE);
 
             foreach ($files as $file) {
-                // Ignore "." and ".." folders
-                if (in_array(substr($file, strrpos($file, '/') + 1), array('.', '..'))) {
+                // Ignore ".", ".." and excluded folder
+                if (in_array(substr($file, strrpos($file, '/') + 1), ['.', '..']) || in_array($file, $excluded_folders)) {
                     continue;
                 }
 
