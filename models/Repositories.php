@@ -153,14 +153,21 @@ class Repositories extends ActiveRecord
     }
 
     /**
-     * Check this repository on availability new version
+     * Checking this repository on availability new version on remote repository
+     * Or diff with last_commit_sha params
      *
+     * @param string $last_commit_sha
      * @return bool
      */
-    public function hasNewVersion()
+    public function hasNewVersion($last_commit_sha = null)
     {
-        $remote_old_commit = null;
         $local_old_commit = Commits::find()->select('sha')->where(['repository_id' => $this->id])->one();
+
+        if (isset($last_commit_sha)) {
+            return ($last_commit_sha != $local_old_commit['sha']) ? true : false;
+        }
+
+        $remote_old_commit = null;
         $branch_info = $this->getRepositoryBranches('master');
 
         if ($this->service_id == ServiceForm::TYPE_GITHUB) {
@@ -170,6 +177,25 @@ class Repositories extends ActiveRecord
         }
 
         return ($remote_old_commit != $local_old_commit['sha']) ? true : false;
+    }
+
+    /**
+     * Get last commit sha
+     *
+     * @return string|null
+     */
+    public function getLastCommitSha()
+    {
+        $last_commit_sha = null;
+        $branch_info = $this->getRepositoryBranches('master');
+
+        if ($this->service_id == ServiceForm::TYPE_GITHUB) {
+            $last_commit_sha = ArrayHelper::getValue($branch_info, 'commit.sha');
+        } elseif ($this->service_id == ServiceForm::TYPE_BITBUCKET) {
+            $last_commit_sha = ArrayHelper::getValue($branch_info, 'target.hash');
+        }
+
+        return $last_commit_sha;
     }
 
 }

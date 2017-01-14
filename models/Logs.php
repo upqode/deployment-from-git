@@ -70,10 +70,14 @@ class Logs extends ActiveRecord
             301 => 'User <b>:user</b> register <b>:repository</b> repository in system!',
             302 => 'User <b>:user</b> modify <b>:repository</b> repository setting!',
             303 => 'User <b>:user</b> deleted <b>:repository</b> repository from system!',
+            304 => 'User <b>:user</b> successfully install commit <b>:commit</b> in <b>:repository</b> repository!',
             // backups
             401 => 'User <b>:user</b> created <b>:repository</b> repository backup!',
             402 => 'User <b>:user</b> restored backup in repository <b>:repository</b>!',
             403 => 'User <b>:user</b> deleted backup from repository <b>:repository</b>!',
+            // cron
+            501 => 'User <b>:user</b> removed <b>:count</b> old <b>:type</b>!',
+            502 => 'User <b>:user</b> successfully updated <b>:repository</b>!',
         ];
 
         if (isset($messages[$msd_id])) {
@@ -91,15 +95,20 @@ class Logs extends ActiveRecord
     public static function setLog($msg_id, $params)
     {
         /** @var Users $user */
-        $user = Yii::$app->user->identity;
+        if (isset(Yii::$app->user)) {
+            $user = Yii::$app->user->identity;
+            $user_id = $user->id;
+            $username = $user->getName();
+        } else { // for console app
+            $user_id = 0;
+            $username = 'System';
+        }
 
-        $msg_params = [':user' => $user->getName()];
-        $msg_params = array_merge($msg_params, $params);
-
-        $message = self::getMessageText($msg_id, $msg_params);
+        $msg_params = [':user' => $username];
+        $message = self::getMessageText($msg_id, array_merge($msg_params, $params));
 
         $log = new self([
-            'user_id' => $user->id,
+            'user_id' => $user_id,
             'action' => $message,
             'time' => Yii::$app->formatter->asTimestamp('now'),
         ]);

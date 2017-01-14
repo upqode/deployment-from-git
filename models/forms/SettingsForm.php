@@ -12,6 +12,7 @@ class SettingsForm extends Model
     public $show_elements_on_page;
     public $remove_logs_after_days;
     public $backups_max_count_copy;
+    public $remove_backups_after_days;
 
     /**
      * @return array
@@ -21,7 +22,7 @@ class SettingsForm extends Model
         return [
             [['admin_email'], 'email'],
             [['backups_dir', 'show_elements_on_page'], 'string', 'max' => 255],
-            [['remove_logs_after_days', 'backups_max_count_copy'], 'string', 'max' => 255],
+            [['remove_logs_after_days', 'backups_max_count_copy', 'remove_backups_after_days'], 'string', 'max' => 255],
         ];
     }
 
@@ -41,6 +42,7 @@ class SettingsForm extends Model
         Settings::updateAll(['value' => $this->show_elements_on_page], ['name' => Settings::SETTING_SHOW_ELEMENTS_ON_PAGE]);
         Settings::updateAll(['value' => $this->remove_logs_after_days], ['name' => Settings::SETTING_REMOVE_LOGS_AFTER_DAYS]);
         Settings::updateAll(['value' => $this->backups_max_count_copy], ['name' => Settings::SETTING_BACKUPS_MAX_COUNT_COPY]);
+        Settings::updateAll(['value' => $this->remove_backups_after_days], ['name' => Settings::SETTING_REMOVE_BACKUPS_AFTER_DAYS]);
 
         return true;
     }

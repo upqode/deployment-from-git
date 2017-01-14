@@ -36,6 +36,7 @@ $this->title = 'System Settings';
                 <p class="lead">Backups</p>
                 <?= $form->field($model, 'backups_dir')->textInput(); ?>
                 <?= $form->field($model, 'backups_max_count_copy')->textInput(); ?>
+                <?= $form->field($model, 'remove_backups_after_days')->textInput(); ?>
 
                 <p class="lead">Others</p>
                 <?= $form->field($model, 'show_elements_on_page')->textInput(); ?>

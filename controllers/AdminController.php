@@ -67,6 +67,7 @@ class AdminController extends BaseController
         $model->show_elements_on_page = Settings::getSettingValue(Settings::SETTING_SHOW_ELEMENTS_ON_PAGE);
         $model->remove_logs_after_days = Settings::getSettingValue(Settings::SETTING_REMOVE_LOGS_AFTER_DAYS);
         $model->backups_max_count_copy = Settings::getSettingValue(Settings::SETTING_BACKUPS_MAX_COUNT_COPY);
+        $model->remove_backups_after_days = Settings::getSettingValue(Settings::SETTING_REMOVE_BACKUPS_AFTER_DAYS);
 
         // update options
         if ($model->load(Yii::$app->request->post()) && $model->update()) {

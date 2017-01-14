@@ -16,9 +16,11 @@ class Settings extends ActiveRecord
 {
     const SETTING_ADMIN_EMAIL = 'admin_email';
     const SETTING_BACKUPS_DIR = 'backups_dir';
+    const SETTING_CRON_SECRET_KEY = 'cron_secret_key';
     const SETTING_SHOW_ELEMENTS_ON_PAGE = 'show_elements_on_page';
     const SETTING_REMOVE_LOGS_AFTER_DAYS = 'remove_logs_after_days';
     const SETTING_BACKUPS_MAX_COUNT_COPY = 'backups_max_count_copy';
+    const SETTING_REMOVE_BACKUPS_AFTER_DAYS = 'remove_backups_after_days';
 
     /**
      * @inheritdoc

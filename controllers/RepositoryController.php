@@ -347,6 +347,8 @@ class RepositoryController extends BaseController
 
         if (true === $install_commit) {
             Commits::saveInstalledCommitInfo($repository_id, $commit);
+            Logs::setLog(304, [':commit' => $commit, ':repository' => $repository->remote_path]);
+
             return Json::encode(['result' => 'Commit has been installed!']);
         } else {
             Yii::$app->response->setStatusCode(400);
