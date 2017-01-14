@@ -116,11 +116,11 @@ class FileSystem
      * @return string - saved file name
      * @throws ErrorException
      */
-    public static function saveStreamFile($dir, $stream, $auth = '')
+    public static function saveStreamFile($dir, $stream, $auth = null)
     {
         @set_time_limit(100);
 
-        if (!empty($auth)) {
+        if (isset($auth)) {
             stream_context_set_default(['http' => ['header' => "Authorization: {$auth}"]]);
         }
 

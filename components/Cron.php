@@ -76,7 +76,7 @@ class Cron
     }
 
     /**
-     * Auto update repositories if need (only for repositories in which the enabled auto update)
+     * Auto update repositories if need (only for repositories in which the enabled auto update and also enable repository service)
      * Possible run several times a day
      *
      * command: 0 0 * * * php /path/to/my/project/yii cron -a=auto-update-repositories
@@ -89,7 +89,7 @@ class Cron
         foreach ($repositories as $repository) {
             $last_commit_sha = $repository->getLastCommitSha();
 
-            if ($last_commit_sha && $repository->hasNewVersion($last_commit_sha)) {
+            if ($last_commit_sha && $repository->hasNewVersion($last_commit_sha) && $repository->service->is_active) {
                 $install_commit = Deployment::installCommit($repository, 'master');
 
                 if (true === $install_commit) {
