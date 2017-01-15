@@ -43,8 +43,8 @@ class Cron
      * Remove old logs (default 10 days ago)
      * Run once a day
      *
-     * command: 0 0 * * * php /path/to/my/project/yii cron -a=remove-old-logs
-     * or: 0 0 * * * wget -O - -q -t 1 http://your-site.com/cron?action=remove-old-logs&key=1234
+     * command: 0 0 * * * php /path/to/my/project/yii cron -a=remove-old-logs > /dev/null 2>&1
+     * or: 0 0 * * * wget -O - -q http://your-site.com/cron?action=remove-old-logs&key=1234 > /dev/null 2>&1
      */
     public static function removeOldLogs()
     {
@@ -61,8 +61,8 @@ class Cron
      * Remove old backups (default 10 days ago)
      * Run once a day
      *
-     * command: 0 0 * * * php /path/to/my/project/yii cron -a=remove-old-backups
-     * or: 0 0 * * * wget -O - -q -t 1 http://your-site.com/cron?action=remove-old-backups&key=1234
+     * command: 0 0 * * * php /path/to/my/project/yii cron -a=remove-old-backups > /dev/null 2>&1
+     * or: 0 0 * * * wget -O - -q http://your-site.com/cron?action=remove-old-backups&key=1234 > /dev/null 2>&1
      */
     public static function removeOldBackups()
     {
@@ -79,8 +79,8 @@ class Cron
      * Auto update repositories if need (only for repositories in which the enabled auto update and also enable repository service)
      * Possible run several times a day
      *
-     * command: 0 0 * * * php /path/to/my/project/yii cron -a=auto-update-repositories
-     * or: 0 0 * * * wget -O - -q -t 1 http://your-site.com/cron?action=auto-update-repositories&key=1234
+     * command: 0 0 * * * php /path/to/my/project/yii cron -a=auto-update-repositories > /dev/null 2>&1
+     * or: 0 0 * * * wget -O - -q http://your-site.com/cron?action=auto-update-repositories&key=1234 > /dev/null 2>&1
      */
     public static function autoUpdateRepositories()
     {
