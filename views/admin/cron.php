@@ -11,7 +11,7 @@ $secret_key = Settings::getSettingValue(Settings::SETTING_CRON_SECRET_KEY);
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-default">
-            <div class="panel-heading">How used cron?</div>
+            <div class="panel-heading">How use cron?</div>
             <div class="tab-container">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#tab1" data-toggle="tab" aria-expanded="false">Remove old logs</a></li>

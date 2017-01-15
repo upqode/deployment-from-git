@@ -86,6 +86,11 @@ class AdminController extends BaseController
         return $this->render('settings', ['model' => $model]);
     }
 
+    /**
+     * Page: how use cron?
+     *
+     * @return string
+     */
     public function actionCron()
     {
         return $this->render('cron');
