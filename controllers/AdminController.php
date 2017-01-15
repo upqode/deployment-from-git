@@ -59,6 +59,13 @@ class AdminController extends BaseController
      */
     public function actionSettings()
     {
+        /** @var Users $user */
+        $user = Yii::$app->user->identity;
+
+        if (!$user->is_admin) {
+            return $this->goBack();
+        }
+
         $model = new SettingsForm();
 
         // get system options

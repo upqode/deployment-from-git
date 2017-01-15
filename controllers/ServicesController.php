@@ -105,7 +105,12 @@ class ServicesController extends BaseController
      */
     public function actionActivate($id)
     {
-        Services::setServiceStatus($id, true);
+        /** @var \app\models\Users $user */
+        $user = Yii::$app->user->identity;
+
+        if ($user->is_admin) {
+            Services::setServiceStatus($id, true);
+        }
 
         return $this->redirect(['index']);
     }
@@ -118,7 +123,12 @@ class ServicesController extends BaseController
      */
     public function actionDeactivate($id)
     {
-        Services::setServiceStatus($id, false);
+        /** @var \app\models\Users $user */
+        $user = Yii::$app->user->identity;
+
+        if ($user->is_admin) {
+            Services::setServiceStatus($id, false);
+        }
 
         return $this->redirect(['index']);
     }

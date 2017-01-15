@@ -65,9 +65,15 @@ class RepositoryController extends BaseController
      */
     public function actionIndex()
     {
+        /** @var Users $user */
+        $user = Yii::$app->user->identity;
         $pageSize = Settings::getSettingValue(Settings::SETTING_SHOW_ELEMENTS_ON_PAGE, 25);
-
         $query = Repositories::find();
+
+        if (!$user->is_admin) {
+            $query->where(['user_id' => $user->id]);
+        }
+
         $countQuery = clone $query;
         $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => $pageSize]);
         $repositories = $query->offset($pages->offset)->limit($pages->limit)->all();
@@ -86,6 +92,21 @@ class RepositoryController extends BaseController
     public function actionAdd()
     {
         /** @var Services $service */
+        /** @var Users $user */
+
+        $user = Yii::$app->user->identity;
+
+        if (!$user->is_admin && !$user->has_create) {
+            Yii::$app->session->setFlash('repositoryOperation', [
+                'type' => 'alert-danger',
+                'icon' => 'mdi mdi-close-circle-o',
+                'title' => 'Danger!',
+                'message' => 'У вас недостаточно прав для выполнения данного действия!',
+            ]);
+
+            return $this->redirect(['index']);
+        }
+
         $model = new RepositoryForm();
         $model->scenario = $model::SCENARIO_CREATE;
 
@@ -185,7 +206,7 @@ class RepositoryController extends BaseController
         $user = Yii::$app->user->identity;
         $repository = Repositories::findOne(intval($id));
 
-        if (!$repository || (!$user->is_admin && $user->id != $repository->user_id)) {
+        if (!$repository || (!$user->is_admin && $user->id != $repository->user_id) || !$user->has_edit) {
             Yii::$app->session->setFlash('repositoryOperation', [
                 'type' => 'alert-danger',
                 'icon' => 'mdi mdi-close-circle-o',
@@ -242,7 +263,7 @@ class RepositoryController extends BaseController
         $user = Yii::$app->user->identity;
         $repository = Repositories::findOne(intval($id));
 
-        if (($user->is_admin || $user->id == $repository->user_id) && $repository && $repository->delete()) {
+        if (($user->is_admin || ($user->id == $repository->user_id && $user->has_delete)) && $repository && $repository->delete()) {
             // @todo: need remove all backups this repository and other data
 
             Yii::$app->session->setFlash('repositoryOperation', [
@@ -332,6 +353,8 @@ class RepositoryController extends BaseController
      */
     public function actionInstallCommit()
     {
+        /** @var Users $user */
+        $user = Yii::$app->user->identity;
         $commit = Yii::$app->request->post('commit');
         $repository_id = Yii::$app->request->post('repository_id');
 
@@ -340,6 +363,10 @@ class RepositoryController extends BaseController
         if (!$repository) {
             Yii::$app->response->setStatusCode(400);
             Yii::$app->response->content = 'Repository not found!';
+            Yii::$app->response->send(); die;
+        } elseif (!$user->is_admin || ($user->id != $repository->user_id) || !$user->has_update) {
+            Yii::$app->response->statusCode = 400;
+            Yii::$app->response->content = 'У вас недостаточно прав для выполнения данного действия!';
             Yii::$app->response->send(); die;
         }
 
