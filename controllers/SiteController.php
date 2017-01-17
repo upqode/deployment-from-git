@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\components\BaseController;
+use app\components\Install;
 use app\models\forms\InstallForm;
 use app\models\forms\LoginForm;
 use app\models\forms\RestorePassword;
@@ -63,7 +64,7 @@ class SiteController extends BaseController
             return $this->redirect(['/admin/index']);
         }
 
-        if (!Users::find()->count()) { // @todo: need method
+        if (Install::needInstalling()) {
             return $this->redirect(['install']);
         }
 
@@ -77,10 +78,7 @@ class SiteController extends BaseController
      */
     public function actionInstall()
     {
-        $hasUser = Users::find()->count();
-
-        // @todo: need more check. need method
-        if ($hasUser) {
+        if (!Install::needInstalling()) {
             return $this->goHome();
         }
 

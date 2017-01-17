@@ -2,6 +2,7 @@
 
 namespace app\models\forms;
 
+use app\components\Install;
 use app\models\Users;
 use Yii;
 use yii\base\Model;
@@ -28,7 +29,7 @@ class InstallForm extends Model
             return false;
         }
 
-        // @todo: install db schema
+        Install::installDbScheme();
 
         // create admin
         $user = new Users([
