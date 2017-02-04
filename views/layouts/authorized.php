@@ -89,8 +89,9 @@ AppAsset::register($this);
                             'options' => ['class' => 'sidebar-elements'],
                             'items' => [
                                 ['label' => 'Menu', 'options' => ['class' => 'divider']],
-                                ['label' => 'Statistics', 'icon' => 'icon mdi mdi-chart', 'url' => ['/admin/index']],
+                                ['label' => 'Services', 'icon' => 'icon mdi mdi-chart', 'url' => ['/services/index']],
                                 ['label' => 'Repositories', 'icon' => 'icon mdi mdi-storage', 'url' => ['/repository/index']],
+                                ['label' => 'Statistics', 'icon' => 'icon mdi mdi-chart', 'url' => ['/admin/index']],
                                 ['label' => 'Backups', 'icon' => 'icon mdi mdi-archive', 'url' => ['/backup/index']],
                                 ['label' => 'Settings', 'icon' => 'icon mdi mdi-settings', 'url' => ['/admin/settings']],
                                 ['label' => 'Users', 'icon' => 'icon mdi mdi-accounts-list-alt', 'url' => ['/user/index']],
